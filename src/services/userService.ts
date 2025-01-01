@@ -9,10 +9,17 @@ export class UserService {
     return rows[0];
   }
 
+  async findByName(name: string) {
+    const { rows } = await pool.query("SELECT * FROM users WHERE name = $1", [
+      name,
+    ]);
+    return rows[0];
+  }
+
   async create(userData: IUser) {
     const { rows } = await pool.query(
-      "INSERT INTO users (email, password) VALUES ($1, $2) RETURNING *",
-      [userData.email, userData.password]
+      "INSERT INTO users (email, password, name) VALUES ($1, $2, $3) RETURNING *",
+      [userData.email, userData.password, userData.name]
     );
     return rows[0];
   }

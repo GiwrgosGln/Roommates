@@ -26,19 +26,28 @@ export class AuthController {
 
   static async register(req: Request, res: Response) {
     try {
-      const { email, password } = req.body;
-      const existingUser = await userService.findByEmail(email);
+      const { email, password, name } = req.body;
 
+      // Check for existing email
+      const existingUser = await userService.findByEmail(email);
       if (existingUser) {
         return res.status(400).json({ message: "User already exists" });
       }
 
-      const hashedPassword = await PasswordUtils.hashPassword(password);
-      await userService.create({ email, password: hashedPassword });
+      // Check for existing name
+      const existingName = await userService.findByName(name);
+      if (existingName) {
+        return res.status(400).json({ message: "Name is already taken" });
+      }
 
-      res.status(201).json({ message: "User created successfully" });
+      const hashedPassword = await PasswordUtils.hashPassword(password);
+      await userService.create({ email, password: hashedPassword, name });
+
+      return res.status(201).json({
+        message: "User created successfully",
+      });
     } catch (error) {
-      res.status(500).json({ message: "Error creating user" });
+      return res.status(500).json({ message: "Error creating user" });
     }
   }
 

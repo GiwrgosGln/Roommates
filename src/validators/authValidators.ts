@@ -2,6 +2,10 @@ import { z } from "zod";
 
 export const loginSchema = z.object({
   body: z.object({
+    name: z
+      .string()
+      .min(6, "Name must be at least 6 characters")
+      .max(50, "Name must not exceed 50 characters"),
     email: z
       .string()
       .email("Please provide a valid email address")
