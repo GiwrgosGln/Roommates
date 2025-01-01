@@ -23,3 +23,10 @@ CREATE TABLE households (
     city TEXT,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
+
+CREATE TABLE household_members (
+    user_id INTEGER REFERENCES users(id) ON DELETE CASCADE,
+    household_id INTEGER REFERENCES households(id) ON DELETE CASCADE,
+    role VARCHAR(50),
+    PRIMARY KEY (user_id, household_id)
+);

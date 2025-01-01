@@ -3,6 +3,7 @@ import dotenv from "dotenv";
 import authRoutes from "./routes/auth";
 import protectedRoutes from "./routes/protectedRoute";
 import householdRoutes from "./routes/householdRoute";
+import householdMemberRoutes from "./routes/householdMemberRoute";
 import cookieParser from "cookie-parser";
 import pool from "./config/database";
 
@@ -39,6 +40,7 @@ app.use(cors(corsOptions));
 app.use("/api/auth", authRoutes);
 app.use("/api", protectedRoutes);
 app.use("/api", householdRoutes);
+app.use("/api", householdMemberRoutes);
 
 app.get("/health", async (req, res) => {
   const dbConnected = await testDatabaseConnection();
