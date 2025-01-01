@@ -2,6 +2,7 @@ import express from "express";
 import dotenv from "dotenv";
 import authRoutes from "./routes/auth";
 import protectedRoutes from "./routes/protectedRoute";
+import householdRoutes from "./routes/householdRoute";
 import cookieParser from "cookie-parser";
 import pool from "./config/database";
 
@@ -10,7 +11,6 @@ dotenv.config();
 const app = express();
 const cors = require("cors");
 
-// Database connection test
 const testDatabaseConnection = async () => {
   try {
     const client = await pool.connect();
@@ -38,6 +38,7 @@ const corsOptions = {
 app.use(cors(corsOptions));
 app.use("/api/auth", authRoutes);
 app.use("/api", protectedRoutes);
+app.use("/api", householdRoutes);
 
 app.get("/health", async (req, res) => {
   const dbConnected = await testDatabaseConnection();
