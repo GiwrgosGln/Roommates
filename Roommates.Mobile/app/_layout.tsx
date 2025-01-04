@@ -1,16 +1,16 @@
 import { Stack } from "expo-router";
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { StatusBar } from "expo-status-bar";
+import React from "react";
 
-const queryClient = new QueryClient();
+import { ThemedStatusBar } from "@/components/ThemedStatusBar";
 
-export default function RootLayout() {
+export default function Layout() {
   return (
-    <QueryClientProvider client={queryClient}>
+    <>
+      <ThemedStatusBar />
       <Stack>
-        <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-        <StatusBar style="dark" />
+        <Stack.Screen name="(protected)" options={{ headerShown: false }} />
+        <Stack.Screen name="login" options={{ headerShown: false }} />
       </Stack>
-    </QueryClientProvider>
+    </>
   );
 }
