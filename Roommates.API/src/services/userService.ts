@@ -23,4 +23,27 @@ export class UserService {
     );
     return rows[0];
   }
+
+  async getUserProfile(email: string) {
+    const { rows } = await pool.query(
+      `SELECT 
+        u.id, 
+        u.name, 
+        u.email, 
+        u.created_at,
+        u.default_household_id,
+        json_agg(json_build_object(
+          'household_id', hm.household_id,
+          'role', hm.role,
+          'household_name', h.name
+        )) as households
+      FROM users u
+      LEFT JOIN household_members hm ON u.id = hm.user_id
+      LEFT JOIN households h ON hm.household_id = h.id
+      WHERE u.email = $1
+      GROUP BY u.id`,
+      [email]
+    );
+    return rows[0];
+  }
 }

@@ -6,6 +6,7 @@ CREATE TABLE users (
     profile_picture VARCHAR(255),
     created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
+    default_household_id INTEGER REFERENCES households(id);
 );
 
 CREATE TABLE refresh_tokens (

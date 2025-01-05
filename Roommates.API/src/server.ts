@@ -4,6 +4,7 @@ import authRoutes from "./routes/auth";
 import protectedRoutes from "./routes/protectedRoute";
 import householdRoutes from "./routes/householdRoute";
 import householdMemberRoutes from "./routes/householdMemberRoute";
+import taskRoutes from "./routes/taskRoute";
 import cookieParser from "cookie-parser";
 import pool from "./config/database";
 
@@ -41,6 +42,7 @@ app.use("/api/auth", authRoutes);
 app.use("/api", protectedRoutes);
 app.use("/api", householdRoutes);
 app.use("/api", householdMemberRoutes);
+app.use("/api", taskRoutes);
 
 app.get("/health", async (req, res) => {
   const dbConnected = await testDatabaseConnection();

@@ -12,7 +12,7 @@ export class AuthController {
     const accessToken = jwt.sign(
       { email: user.email },
       process.env.JWT_ACCESS_SECRET!,
-      { expiresIn: "15m" }
+      { expiresIn: "1m" }
     );
 
     const refreshToken = jwt.sign(
