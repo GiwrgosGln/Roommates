@@ -6,9 +6,9 @@ import { router } from "expo-router";
 import { API_URL } from "@/constants/Endpoint";
 
 export default function Login() {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [name, setName] = useState("");
+  const [email, setEmail] = useState("test@gmail.com");
+  const [password, setPassword] = useState("Test123!");
+  const [name, setName] = useState("test123");
 
   const handleLogin = async () => {
     console.log("Login attempt started");

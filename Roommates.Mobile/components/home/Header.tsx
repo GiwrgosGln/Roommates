@@ -1,7 +1,7 @@
 import { View, Text } from "../StyledComponents";
 import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
 import { Colors } from "../../constants/Colors";
-import { useColorScheme } from "react-native";
+import { Image, useColorScheme } from "react-native";
 
 export default function Header() {
   const colorScheme = useColorScheme();
@@ -15,8 +15,13 @@ export default function Header() {
         alignItems: "center",
       }}
     >
-      <Text style={{ fontSize: 24, width: "50%" }}>Welcome to the Studio!</Text>
-      <MaterialCommunityIcons name="home-switch" size={40} color="#00AAFF" />
+      <Text style={{ fontSize: 24 }}>Welcome back, John!</Text>
+      <Image
+        source={{
+          uri: "https://w7.pngwing.com/pngs/4/736/png-transparent-female-avatar-girl-face-woman-user-flat-classy-users-icon.png",
+        }}
+        style={{ width: 50, height: 50, borderRadius: 25 }}
+      />
     </View>
   );
 }

@@ -9,6 +9,7 @@ import { useIsFocused } from "@react-navigation/native";
 import { Pressable } from "react-native";
 import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
 import { useTokenRefresh } from "@/hooks/useTokenRefresh";
+import Entypo from "@expo/vector-icons/Entypo";
 
 interface Task {
   id: number;
@@ -50,6 +51,7 @@ export default function WeeklyTasks({ householdId }: WeeklyTasksProps) {
 
       if (response.status === 403) {
         // Token expired, refresh it
+        console.log("Token expired, refreshing...");
         token = await refreshTokens();
         console.log("Token refreshed:", token);
         // Retry with new token
@@ -63,7 +65,6 @@ export default function WeeklyTasks({ householdId }: WeeklyTasksProps) {
 
       const data = await response.json();
       setTasks(data);
-      console.log("Current tasks in state:", tasks);
     } catch (error) {
       console.error("Failed to fetch tasks:", error);
     } finally {
@@ -80,13 +81,11 @@ export default function WeeklyTasks({ householdId }: WeeklyTasksProps) {
         padding: 16,
         marginVertical: 4,
         borderRadius: 8,
-        // Add shadow and elevation for better separation
         shadowColor: "#000",
         shadowOffset: { width: 0, height: 1 },
         shadowOpacity: 0.1,
         shadowRadius: 2,
         elevation: 2,
-        // Add a very subtle background tint
         backgroundColor: "#2E2E3E",
       }}
     >
@@ -94,14 +93,17 @@ export default function WeeklyTasks({ householdId }: WeeklyTasksProps) {
         style={{
           fontSize: 16,
           color: Colors[colorScheme ?? "light"].text,
+          textDecorationLine: item.completed_at ? "line-through" : "none",
         }}
       >
         {item.title}
       </Text>
 
-      {item.completed_at && (
-        <MaterialCommunityIcons name="check-circle" size={24} color="#4CAF50" />
-      )}
+      <MaterialCommunityIcons
+        name="check"
+        size={24}
+        color={item.completed_at ? "#4CAF50" : "#757575"}
+      />
     </View>
   );
 
@@ -114,17 +116,29 @@ export default function WeeklyTasks({ householdId }: WeeklyTasksProps) {
   }
 
   return (
-    <View style={{ flex: 1, marginTop: 20 }}>
-      <Text
+    <View style={{ flex: 1, marginTop: 40 }}>
+      <View
         style={{
-          fontSize: 20,
-          fontWeight: "bold",
+          flexDirection: "row",
+          justifyContent: "space-between",
+          alignItems: "center",
           marginBottom: 16,
-          color: Colors[colorScheme ?? "light"].text,
         }}
       >
-        Tasks
-      </Text>
+        <Text
+          style={{
+            fontSize: 20,
+            fontWeight: "bold",
+
+            color: Colors[colorScheme ?? "light"].text,
+          }}
+        >
+          Tasks
+        </Text>
+        <Pressable>
+          <Entypo name="add-to-list" size={24} color="white" />
+        </Pressable>
+      </View>
       <FlatList
         data={tasks}
         renderItem={renderTask}
