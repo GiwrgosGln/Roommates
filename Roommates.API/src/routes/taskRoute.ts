@@ -2,26 +2,34 @@ import { Router } from "express";
 import { authenticateToken } from "../middleware/auth";
 import { AuthRequest } from "../types/auth";
 import { Response } from "express";
-import { TaskService } from "../services/taskService";
+import { validateRequest } from "../middleware/validateRequest";
+import { createTaskSchema } from "../validators/taskValidators";
+import { TaskController } from "../controllers/taskController";
 
 const router = Router();
 
-const taskService = new TaskService();
+router.post(
+  "/tasks",
+  authenticateToken as any,
+  validateRequest(createTaskSchema),
+  async (req: AuthRequest, res: Response) => {
+    await TaskController.create(req, res);
+  }
+);
 
 router.get(
   "/household/:householdId/tasks",
   authenticateToken as any,
-  async (req: AuthRequest, res: Response): Promise<void> => {
-    const householdId = parseInt(req.params.householdId);
-    const userEmail = req.user?.email;
+  async (req: AuthRequest, res: Response) => {
+    await TaskController.getHouseholdTasks(req, res);
+  }
+);
 
-    if (!userEmail) {
-      res.status(400).json({ error: "User email not found" });
-      return;
-    }
-
-    const tasks = await taskService.getHouseholdTasks(householdId, userEmail);
-    res.json(tasks);
+router.patch(
+  "/household/:householdId/tasks/:taskId/complete",
+  authenticateToken as any,
+  async (req: AuthRequest, res: Response) => {
+    await TaskController.setCompleted(req, res);
   }
 );
 

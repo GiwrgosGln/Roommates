@@ -31,4 +31,27 @@ export class TaskService {
 
     return rows;
   }
+
+  async createTask(taskData: any, createdById: number) {
+    const { rows } = await pool.query(
+      `INSERT INTO tasks 
+      (title, description, household_id, created_by_id) 
+      VALUES ($1, $2, $3, $4) 
+      RETURNING *`,
+      [taskData.title, taskData.description, taskData.household_id, createdById]
+    );
+    return rows[0];
+  }
+
+  async setTaskCompleted(taskId: number, householdId: number) {
+    const { rows } = await pool.query(
+      `UPDATE tasks 
+      SET completed_at = NOW() 
+      WHERE id = $1 
+      AND household_id = $2 
+      RETURNING *`,
+      [taskId, householdId]
+    );
+    return rows[0];
+  }
 }
