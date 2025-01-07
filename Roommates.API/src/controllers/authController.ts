@@ -1,5 +1,6 @@
 import { Request, Response } from "express";
-import jwt, { JwtPayload } from "jsonwebtoken";
+import jwt from "jsonwebtoken";
+import { JwtPayload } from "jsonwebtoken";
 import { UserService } from "../services/userService";
 import { AuthService } from "../services/authService";
 import { PasswordUtils } from "../utils/passwordUtils";
@@ -8,15 +9,19 @@ const userService = new UserService();
 const authService = new AuthService();
 
 export class AuthController {
-  private static generateTokens(user: any) {
+  private static generateTokens(userData: { email: string }) {
+    if (!userData || !userData.email) {
+      throw new Error("Invalid user data for token generation");
+    }
+
     const accessToken = jwt.sign(
-      { email: user.email },
+      { email: userData.email },
       process.env.JWT_ACCESS_SECRET!,
       { expiresIn: "1m" }
     );
 
     const refreshToken = jwt.sign(
-      { email: user.email },
+      { email: userData.email },
       process.env.JWT_REFRESH_SECRET!,
       { expiresIn: "7d" }
     );
@@ -28,23 +33,27 @@ export class AuthController {
     try {
       const { email, password, name } = req.body;
 
-      // Check for existing email
       const existingUser = await userService.findByEmail(email);
       if (existingUser) {
         return res.status(400).json({ message: "User already exists" });
       }
 
-      // Check for existing name
       const existingName = await userService.findByName(name);
       if (existingName) {
         return res.status(400).json({ message: "Name is already taken" });
       }
 
       const hashedPassword = await PasswordUtils.hashPassword(password);
-      await userService.create({ email, password: hashedPassword, name });
+      const newUser = await userService.create({
+        email,
+        password: hashedPassword,
+        name,
+      });
 
+      const tokens = AuthController.generateTokens({ email: newUser.email });
       return res.status(201).json({
         message: "User created successfully",
+        tokens,
       });
     } catch (error) {
       return res.status(500).json({ message: "Error creating user" });
@@ -64,60 +73,46 @@ export class AuthController {
         user.password,
         password
       );
+
       if (!validPassword) {
         return res.status(400).json({ message: "Invalid password" });
       }
 
-      const { accessToken, refreshToken } = AuthController.generateTokens(user);
+      const tokens = AuthController.generateTokens({ email: user.email });
 
-      const expiresAt = new Date(Date.now() + 7 * 24 * 60 * 60 * 1000);
-      await authService.storeRefreshToken(user.id, refreshToken, expiresAt);
-
-      res.cookie("refreshToken", refreshToken, {
+      // Set cookies with tokens
+      res.cookie("accessToken", tokens.accessToken, {
         httpOnly: true,
+
         secure: process.env.NODE_ENV === "production",
-        sameSite: "lax",
-        path: "/",
-        maxAge: 7 * 24 * 60 * 60 * 1000,
+        sameSite: "strict",
+        maxAge: 60 * 1000, // 1 minute
       });
 
-      res.cookie("accessToken", accessToken, {
+      res.cookie("refreshToken", tokens.refreshToken, {
         httpOnly: true,
-        secure: process.env.NODE_ENV === "production",
-        sameSite: "lax",
-        path: "/",
-        maxAge: 15 * 60 * 1000,
-      });
 
-      return res.status(200).json({
-        accessToken,
-        refreshToken,
-        expiresIn: 900,
-        refreshExpiresIn: 604800,
+        secure: process.env.NODE_ENV === "production",
+        sameSite: "strict",
+        maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
+      });
+      // Return tokens in response body along with success message
+      return res.json({
+        message: "Login successful",
+        accessToken: tokens.accessToken,
+        refreshToken: tokens.refreshToken,
       });
     } catch (error) {
-      return res.status(500).json({ message: "Error logging in" });
+      return res.status(500).json({ message: "Error during login" });
     }
   }
-
   static async refresh(req: Request, res: Response) {
-    const cookieToken = req.cookies.refreshToken;
-    const bodyToken = req.body.refreshToken;
-    const refreshToken = cookieToken || bodyToken;
-
-    if (!refreshToken) {
-      return res.status(401).json({ message: "Refresh token required" });
-    }
-
     try {
-      const storedToken = await authService.findRefreshToken(refreshToken);
-      if (!storedToken) {
-        return res
-          .status(401)
-          .json({ message: "Invalid or expired refresh token" });
-      }
+      const refreshToken = req.cookies.refreshToken || req.body.refreshToken;
 
-      await authService.invalidateRefreshToken(refreshToken);
+      if (!refreshToken) {
+        return res.status(401).json({ message: "No refresh token provided" });
+      }
 
       const decoded = jwt.verify(
         refreshToken,
@@ -125,39 +120,52 @@ export class AuthController {
       ) as JwtPayload;
       const user = await userService.findByEmail(decoded.email);
 
-      const { accessToken, refreshToken: newRefreshToken } =
-        AuthController.generateTokens(user);
+      if (!user) {
+        return res
+          .status(403)
+          .json({ message: "Invalid or expired refresh token" });
+      }
 
-      const expiresAt = new Date(Date.now() + 7 * 24 * 60 * 60 * 1000);
-      await authService.storeRefreshToken(user.id, newRefreshToken, expiresAt);
+      // Remove old refresh token
+      await authService.invalidateRefreshToken(refreshToken);
 
-      res.cookie("refreshToken", newRefreshToken, {
+      // Generate new tokens
+      const tokens = AuthController.generateTokens({ email: user.email });
+
+      // Store new refresh token
+      const expiresAt = new Date(Date.now() + 7 * 24 * 60 * 60 * 1000); // 7 days
+      await authService.storeRefreshToken(
+        user.id,
+        tokens.refreshToken,
+        expiresAt
+      );
+
+      // Set new cookies
+      res.cookie("accessToken", tokens.accessToken, {
         httpOnly: true,
         secure: process.env.NODE_ENV === "production",
-        sameSite: "lax",
-        path: "/",
+        sameSite: "strict",
+        maxAge: 60 * 1000,
+      });
+
+      res.cookie("refreshToken", tokens.refreshToken, {
+        httpOnly: true,
+
+        secure: process.env.NODE_ENV === "production",
+        sameSite: "strict",
         maxAge: 7 * 24 * 60 * 60 * 1000,
       });
 
-      res.cookie("accessToken", accessToken, {
-        httpOnly: true,
-        secure: process.env.NODE_ENV === "production",
-        sameSite: "lax",
-        path: "/",
-        maxAge: 15 * 60 * 1000,
-      });
-
-      return res.status(200).json({
-        accessToken,
-        refreshToken: newRefreshToken,
-        expiresIn: 900,
-        refreshExpiresIn: 604800,
+      return res.json({
+        accessToken: tokens.accessToken,
+        refreshToken: tokens.refreshToken,
       });
     } catch (error) {
-      return res.status(401).json({ message: "Invalid refresh token" });
+      return res
+        .status(403)
+        .json({ message: "Invalid or expired refresh token" });
     }
   }
-
   static async logout(req: Request, res: Response) {
     try {
       const refreshToken = req.cookies.refreshToken || req.body.refreshToken;

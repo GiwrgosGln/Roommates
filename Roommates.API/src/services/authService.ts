@@ -1,30 +1,52 @@
-import pool from "../config/database";
+import { PrismaClient } from "@prisma/client";
+
+const prisma = new PrismaClient();
 
 export class AuthService {
   async storeRefreshToken(userId: number, token: string, expiresAt: Date) {
-    await pool.query(
-      "INSERT INTO refresh_tokens (user_id, token, expires_at) VALUES ($1, $2, $3)",
-      [userId, token, expiresAt]
-    );
+    return prisma.refresh_tokens.create({
+      data: {
+        user_id: userId,
+        token,
+        expires_at: expiresAt,
+      },
+    });
   }
 
   async findRefreshToken(token: string) {
-    const { rows } = await pool.query(
-      "SELECT * FROM refresh_tokens WHERE token = $1 AND expires_at > NOW()",
-      [token]
-    );
-    return rows[0];
+    return prisma.refresh_tokens.findFirst({
+      where: {
+        token,
+        expires_at: {
+          gt: new Date(),
+        },
+      },
+    });
   }
 
   async invalidateRefreshToken(token: string) {
-    await pool.query("DELETE FROM refresh_tokens WHERE token = $1", [token]);
+    return prisma.refresh_tokens.deleteMany({
+      where: {
+        token,
+      },
+    });
   }
 
   async invalidateAllUserRefreshTokens(userId: number) {
-    await pool.query("DELETE FROM refresh_tokens WHERE user_id = $1", [userId]);
+    return prisma.refresh_tokens.deleteMany({
+      where: {
+        user_id: userId,
+      },
+    });
   }
 
   async cleanExpiredTokens() {
-    await pool.query("DELETE FROM refresh_tokens WHERE expires_at <= NOW()");
+    return prisma.refresh_tokens.deleteMany({
+      where: {
+        expires_at: {
+          lt: new Date(),
+        },
+      },
+    });
   }
 }

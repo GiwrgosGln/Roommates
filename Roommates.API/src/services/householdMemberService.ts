@@ -1,47 +1,63 @@
-import pool from "../config/database";
+import { PrismaClient } from "@prisma/client";
 import { IHouseholdMember } from "../types/householdMember";
+
+const prisma = new PrismaClient();
 
 export class HouseholdMemberService {
   async addMember(memberData: IHouseholdMember) {
-    const { rows } = await pool.query(
-      "INSERT INTO household_members (user_id, household_id, role) VALUES ($1, $2, $3) RETURNING *",
-      [memberData.user_id, memberData.household_id, memberData.role]
-    );
-    return rows[0];
+    return prisma.household_members.create({
+      data: {
+        user_id: memberData.user_id,
+        household_id: memberData.household_id,
+        role: memberData.role,
+      },
+      include: {
+        users: true,
+        households: true,
+      },
+    });
   }
 
   async getMembersOfHousehold(householdId: number) {
-    const { rows } = await pool.query(
-      `SELECT hm.*, u.name, u.email 
-       FROM household_members hm 
-       JOIN users u ON hm.user_id = u.id 
-       WHERE household_id = $1`,
-      [householdId]
-    );
-    return rows;
+    return prisma.household_members.findMany({
+      where: {
+        household_id: householdId,
+      },
+      include: {
+        users: {
+          select: {
+            name: true,
+            email: true,
+          },
+        },
+      },
+    });
   }
 
   async updateMemberRole(userId: number, householdId: number, role: string) {
-    const checkResult = await pool.query(
-      "SELECT * FROM household_members WHERE user_id = $1 AND household_id = $2",
-      [userId, householdId]
-    );
-
-    if (checkResult.rows.length === 0) {
-      return null;
-    }
-
-    const { rows } = await pool.query(
-      "UPDATE household_members SET role = $1 WHERE user_id = $2 AND household_id = $3 RETURNING *",
-      [role, userId, householdId]
-    );
-    return rows[0];
+    return prisma.household_members.update({
+      where: {
+        user_id_household_id: {
+          user_id: userId,
+          household_id: householdId,
+        },
+      },
+      data: { role },
+      include: {
+        users: true,
+        households: true,
+      },
+    });
   }
 
   async removeMember(userId: number, householdId: number) {
-    await pool.query(
-      "DELETE FROM household_members WHERE user_id = $1 AND household_id = $2",
-      [userId, householdId]
-    );
+    return prisma.household_members.delete({
+      where: {
+        user_id_household_id: {
+          user_id: userId,
+          household_id: householdId,
+        },
+      },
+    });
   }
 }

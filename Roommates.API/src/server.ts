@@ -43,26 +43,32 @@ app.use("/api", protectedRoutes);
 app.use("/api", householdRoutes);
 app.use("/api", householdMemberRoutes);
 app.use("/api", taskRoutes);
+import { prisma } from "./lib/prisma";
 
 app.get("/health", async (req, res) => {
-  const dbConnected = await testDatabaseConnection();
-  res.json({
-    status: "OK",
-    database: dbConnected ? "Connected" : "Disconnected",
-  });
-});
-
-const PORT = process.env.PORT || 3000;
-
-// Start server only after testing database connection
-const startServer = async () => {
-  const dbConnected = await testDatabaseConnection();
-  if (dbConnected) {
-    app.listen(PORT, () => {
-      console.log(`Server running on port ${PORT}`);
+  try {
+    await prisma.$connect();
+    res.json({
+      status: "OK",
+      database: "Connected",
     });
-  } else {
-    console.error("Server not started due to database connection failure");
+  } catch (error) {
+    res.json({
+      status: "OK",
+      database: "Disconnected",
+    });
+  }
+});
+const startServer = async () => {
+  try {
+    await prisma.$connect();
+    console.log("Database connected successfully");
+
+    app.listen(process.env.PORT, () => {
+      console.log(`Server running on port ${process.env.PORT}`);
+    });
+  } catch (error) {
+    console.error("Unable to connect to the database:", error);
     process.exit(1);
   }
 };

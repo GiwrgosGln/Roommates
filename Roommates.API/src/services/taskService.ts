@@ -1,57 +1,56 @@
-import pool from "../config/database";
+import { PrismaClient } from "@prisma/client";
+
+const prisma = new PrismaClient();
 
 export class TaskService {
-  async getHouseholdTasks(householdId: number, userEmail: string) {
-    const { rows } = await pool.query(
-      `
-      SELECT 
-        t.id,
-        t.title,
-        t.description,
-        t.completed_at,
-        t.created_at,
-        u.name as created_by_name
-      FROM tasks t
-      JOIN users u ON t.created_by_id = u.id
-      JOIN household_members hm ON hm.household_id = t.household_id
-      JOIN users cu ON cu.id = hm.user_id
-      WHERE t.household_id = $1
-      AND cu.email = $2
-      AND (
-        t.completed_at IS NULL 
-        OR 
-        t.completed_at > NOW() - INTERVAL '7 days'
-      )
-      ORDER BY 
-        t.completed_at NULLS FIRST,
-        t.created_at DESC
-    `,
-      [householdId, userEmail]
-    );
+  async createTask(taskData: {
+    title: string;
+    description?: string;
+    household_id: number;
+    created_by_id: number;
+  }) {
+    return prisma.tasks.create({
+      data: taskData,
+      include: {
+        users: true,
 
-    return rows;
+        households: true,
+      },
+    });
   }
 
-  async createTask(taskData: any, createdById: number) {
-    const { rows } = await pool.query(
-      `INSERT INTO tasks 
-      (title, description, household_id, created_by_id) 
-      VALUES ($1, $2, $3, $4) 
-      RETURNING *`,
-      [taskData.title, taskData.description, taskData.household_id, createdById]
-    );
-    return rows[0];
+  async getHouseholdTasks(householdId: number) {
+    return prisma.tasks.findMany({
+      where: {
+        household_id: householdId,
+      },
+      orderBy: {
+        created_at: "desc",
+      },
+    });
   }
 
-  async setTaskCompleted(taskId: number, householdId: number) {
-    const { rows } = await pool.query(
-      `UPDATE tasks 
-      SET completed_at = NOW() 
-      WHERE id = $1 
-      AND household_id = $2 
-      RETURNING *`,
-      [taskId, householdId]
-    );
-    return rows[0];
+  async updateTask(
+    taskId: number,
+    taskData: {
+      title?: string;
+      description?: string;
+      completed_at?: Date | null;
+    }
+  ) {
+    return prisma.tasks.update({
+      where: { id: taskId },
+      data: taskData,
+      include: {
+        users: true,
+        households: true,
+      },
+    });
+  }
+
+  async deleteTask(taskId: number) {
+    return prisma.tasks.delete({
+      where: { id: taskId },
+    });
   }
 }

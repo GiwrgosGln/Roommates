@@ -1,32 +1,46 @@
-import pool from "../config/database";
+import { PrismaClient } from "@prisma/client";
 import { IHousehold } from "../types/household";
+
+const prisma = new PrismaClient();
 
 export class HouseholdService {
   async create(householdData: IHousehold) {
-    const { rows } = await pool.query(
-      "INSERT INTO households (name, address, city) VALUES ($1, $2, $3) RETURNING *",
-      [householdData.name, householdData.address, householdData.city]
-    );
-    return rows[0];
+    return prisma.households.create({
+      data: {
+        name: householdData.name,
+        address: householdData.address,
+        city: householdData.city,
+      },
+    });
   }
 
   async findById(id: number) {
-    const { rows } = await pool.query(
-      "SELECT * FROM households WHERE id = $1",
-      [id]
-    );
-    return rows[0];
+    return prisma.households.findUnique({
+      where: { id },
+      include: {
+        household_members: {
+          include: {
+            users: true,
+          },
+        },
+      },
+    });
   }
 
   async update(id: number, householdData: Partial<IHousehold>) {
-    const { rows } = await pool.query(
-      "UPDATE households SET name = $1, address = $2, city = $3 WHERE id = $4 RETURNING *",
-      [householdData.name, householdData.address, householdData.city, id]
-    );
-    return rows[0];
+    return prisma.households.update({
+      where: { id },
+      data: {
+        name: householdData.name,
+        address: householdData.address,
+        city: householdData.city,
+      },
+    });
   }
 
   async delete(id: number) {
-    await pool.query("DELETE FROM households WHERE id = $1", [id]);
+    return prisma.households.delete({
+      where: { id },
+    });
   }
 }
