@@ -4,16 +4,20 @@ import { TextInput, TouchableOpacity } from "react-native";
 import * as SecureStore from "expo-secure-store";
 import { router } from "expo-router";
 import { API_URL } from "@/constants/Endpoint";
+import { useThemeColor } from "@/hooks/useThemeColor";
 
 export default function Login() {
   const [email, setEmail] = useState("test@gmail.com");
   const [password, setPassword] = useState("Test123!");
-  const [name, setName] = useState("test123");
+  const [secondaryBackground, textColor, secondaryTextColor] = [
+    useThemeColor({}, "secondaryBackground"),
+    useThemeColor({}, "text"),
+    useThemeColor({}, "secondaryText"),
+  ];
 
   const handleLogin = async () => {
-    console.log("Login attempt started");
     try {
-      console.log("Sending request with:", { email, password, name });
+      console.log("Sending request with:", { email, password });
       const response = await fetch(`${API_URL}/auth/login`, {
         method: "POST",
         headers: {
@@ -22,18 +26,14 @@ export default function Login() {
         body: JSON.stringify({
           email,
           password,
-          name,
         }),
       });
 
       const data = await response.json();
-      console.log("Response received:", data);
 
       if (data.accessToken) {
-        console.log("Token received, storing...");
         await SecureStore.setItemAsync("token", data.accessToken);
         await SecureStore.setItemAsync("refreshToken", data.refreshToken);
-        console.log("Navigating to protected route...");
         router.replace("/(protected)/(tabs)");
       }
     } catch (error) {
@@ -47,26 +47,36 @@ export default function Login() {
         placeholder="Email"
         value={email}
         onChangeText={setEmail}
-        style={{ marginBottom: 10, padding: 10, borderWidth: 1 }}
+        style={{
+          marginBottom: 10,
+          padding: 10,
+          borderWidth: 1,
+          color: secondaryTextColor,
+          borderColor: secondaryTextColor,
+        }}
       />
       <TextInput
         placeholder="Password"
         value={password}
         onChangeText={setPassword}
         secureTextEntry
-        style={{ marginBottom: 10, padding: 10, borderWidth: 1 }}
-      />
-      <TextInput
-        placeholder="Name"
-        value={name}
-        onChangeText={setName}
-        style={{ marginBottom: 10, padding: 10, borderWidth: 1 }}
+        style={{
+          marginBottom: 10,
+          padding: 10,
+          borderWidth: 1,
+          color: secondaryTextColor,
+          borderColor: secondaryTextColor,
+        }}
       />
       <TouchableOpacity
         onPress={handleLogin}
-        style={{ backgroundColor: "blue", padding: 15, borderRadius: 5 }}
+        style={{
+          backgroundColor: secondaryBackground,
+          padding: 15,
+          borderRadius: 5,
+        }}
       >
-        <Text style={{ color: "white", textAlign: "center" }}>Login</Text>
+        <Text style={{ color: textColor, textAlign: "center" }}>Login</Text>
       </TouchableOpacity>
     </View>
   );

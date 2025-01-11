@@ -10,26 +10,22 @@ import { Pressable } from "react-native";
 import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
 import { useTokenRefresh } from "@/hooks/useTokenRefresh";
 import Entypo from "@expo/vector-icons/Entypo";
-
-interface Task {
-  id: number;
-  title: string;
-  description: string | null;
-  completed_at: string | null;
-  created_at: string;
-  created_by_name: string;
-}
-
-interface WeeklyTasksProps {
-  householdId: number;
-}
+import { useThemeColor } from "@/hooks/useThemeColor";
+import WeeklyTasksItem from "./WeeklyTasksItem";
+import { Task, WeeklyTasksProps } from "@/types/task";
 
 export default function WeeklyTasks({ householdId }: WeeklyTasksProps) {
   const [tasks, setTasks] = useState<Task[]>([]);
   const [loading, setLoading] = useState(true);
+  const [showAll, setShowAll] = useState(false);
   const colorScheme = useColorScheme();
   const isFocused = useIsFocused();
   const { refreshTokens } = useTokenRefresh();
+  const [backgroundColor, textColor, secondaryTextColor] = [
+    useThemeColor({}, "background"),
+    useThemeColor({}, "text"),
+    useThemeColor({}, "secondaryText"),
+  ];
 
   useEffect(() => {
     if (isFocused) {
@@ -73,38 +69,7 @@ export default function WeeklyTasks({ householdId }: WeeklyTasksProps) {
   };
 
   const renderTask = ({ item }: { item: Task }) => (
-    <View
-      style={{
-        flexDirection: "row",
-        alignItems: "center",
-        justifyContent: "space-between",
-        padding: 16,
-        marginVertical: 4,
-        borderRadius: 8,
-        shadowColor: "#000",
-        shadowOffset: { width: 0, height: 1 },
-        shadowOpacity: 0.1,
-        shadowRadius: 2,
-        elevation: 2,
-        backgroundColor: "#2E2E3E",
-      }}
-    >
-      <Text
-        style={{
-          fontSize: 16,
-          color: Colors[colorScheme ?? "light"].text,
-          textDecorationLine: item.completed_at ? "line-through" : "none",
-        }}
-      >
-        {item.title}
-      </Text>
-
-      <MaterialCommunityIcons
-        name="check"
-        size={24}
-        color={item.completed_at ? "#4CAF50" : "#757575"}
-      />
-    </View>
+    <WeeklyTasksItem task={item} />
   );
 
   if (loading) {
@@ -114,6 +79,8 @@ export default function WeeklyTasks({ householdId }: WeeklyTasksProps) {
       </View>
     );
   }
+
+  const displayedTasks = showAll ? tasks : tasks.slice(0, 4);
 
   return (
     <View style={{ flex: 1, marginTop: 40 }}>
@@ -129,8 +96,7 @@ export default function WeeklyTasks({ householdId }: WeeklyTasksProps) {
           style={{
             fontSize: 20,
             fontWeight: "bold",
-
-            color: Colors[colorScheme ?? "light"].text,
+            color: secondaryTextColor,
           }}
         >
           Tasks
@@ -139,12 +105,29 @@ export default function WeeklyTasks({ householdId }: WeeklyTasksProps) {
           <Entypo name="add-to-list" size={24} color="white" />
         </Pressable>
       </View>
-      <FlatList
-        data={tasks}
-        renderItem={renderTask}
-        keyExtractor={(item) => item.id.toString()}
-        showsVerticalScrollIndicator={false}
-      />
+      <View>
+        <FlatList
+          data={displayedTasks}
+          renderItem={renderTask}
+          keyExtractor={(item) => item.id.toString()}
+          showsVerticalScrollIndicator={false}
+        />
+        {tasks.length > 4 && (
+          <Pressable
+            onPress={() => setShowAll(!showAll)}
+            style={{
+              padding: 12,
+              alignItems: "center",
+              marginTop: 8,
+              borderRadius: 8,
+            }}
+          >
+            <Text style={{ color: secondaryTextColor }}>
+              {showAll ? "Show Less" : `Show All (${tasks.length})`}
+            </Text>
+          </Pressable>
+        )}
+      </View>
     </View>
   );
 }

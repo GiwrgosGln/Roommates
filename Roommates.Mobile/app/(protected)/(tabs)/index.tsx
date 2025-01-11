@@ -11,7 +11,7 @@ export default function Home() {
           flex: 1,
           height: "100%",
           width: "100%",
-          paddingHorizontal: 20,
+          padding: 20,
         }}
       >
         <Header />

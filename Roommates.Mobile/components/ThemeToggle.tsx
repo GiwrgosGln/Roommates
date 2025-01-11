@@ -4,7 +4,7 @@ import { useThemeColor } from "@/hooks/useThemeColor";
 
 export function ThemeToggle() {
   const backgroundColor = useThemeColor({}, "background");
-  const textColor = useThemeColor({}, "text");
+  const secondaryTextColor = useThemeColor({}, "secondaryText");
 
   const toggleTheme = () => {
     const currentTheme = Appearance.getColorScheme();
@@ -21,7 +21,7 @@ export function ThemeToggle() {
         borderRadius: 8,
       }}
     >
-      <Text style={{ color: textColor }}>Toggle Theme</Text>
+      <Text style={{ color: secondaryTextColor }}>Toggle Theme</Text>
     </Pressable>
   );
 }

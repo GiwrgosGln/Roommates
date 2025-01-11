@@ -1,27 +1,10 @@
-import { Text, View } from "@/components/StyledComponents";
-import { ThemeToggle } from "@/components/ThemeToggle";
+import { Text } from "@/components/StyledComponents";
 import { TouchableOpacity, Alert } from "react-native";
 import * as SecureStore from "expo-secure-store";
 import { router } from "expo-router";
-import { useEffect, useState } from "react";
 import { API_URL } from "@/constants/Endpoint";
-import { SafeAreaView } from "react-native-safe-area-context";
 
 export default function Logout() {
-  const [accessToken, setAccessToken] = useState("");
-  const [refreshToken, setRefreshToken] = useState("");
-
-  useEffect(() => {
-    loadTokens();
-  }, []);
-
-  const loadTokens = async () => {
-    const token = await SecureStore.getItemAsync("token");
-    const refresh = await SecureStore.getItemAsync("refreshToken");
-    setAccessToken(token || "");
-    setRefreshToken(refresh || "");
-  };
-
   const handleLogout = async () => {
     try {
       const response = await fetch(`${API_URL}/auth/logout`, {
@@ -29,13 +12,10 @@ export default function Logout() {
       });
 
       const data = await response.json();
-      Alert.alert("Logout", data.message);
-
       await SecureStore.deleteItemAsync("token");
       await SecureStore.deleteItemAsync("refreshToken");
       router.replace("/login");
     } catch (error) {
-      Alert.alert("Logout", "Successfully logged out");
       await SecureStore.deleteItemAsync("token");
       await SecureStore.deleteItemAsync("refreshToken");
       router.replace("/login");
@@ -43,23 +23,15 @@ export default function Logout() {
   };
 
   return (
-    <View>
-      <Text style={{ marginTop: 20, fontWeight: "bold" }}>Access Token:</Text>
-      <Text style={{ marginBottom: 10 }}>{accessToken}</Text>
-
-      <Text style={{ fontWeight: "bold" }}>Refresh Token:</Text>
-      <Text style={{ marginBottom: 20 }}>{refreshToken}</Text>
-
-      <TouchableOpacity
-        onPress={handleLogout}
-        style={{
-          backgroundColor: "red",
-          padding: 15,
-          borderRadius: 5,
-        }}
-      >
-        <Text style={{ color: "white", textAlign: "center" }}>Logout</Text>
-      </TouchableOpacity>
-    </View>
+    <TouchableOpacity
+      onPress={handleLogout}
+      style={{
+        backgroundColor: "#ff6b6b",
+        padding: 15,
+        borderRadius: 5,
+      }}
+    >
+      <Text style={{ color: "white", textAlign: "center" }}>Logout</Text>
+    </TouchableOpacity>
   );
 }
