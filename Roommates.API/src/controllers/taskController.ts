@@ -4,7 +4,7 @@ import { AuthRequest } from "../types/auth";
 const taskService = new TaskService();
 
 export class TaskController {
-  static async createTask(req: AuthRequest, res: Response) {
+  static async create(req: AuthRequest, res: Response) {
     try {
       const taskData = {
         ...req.body,
@@ -18,6 +18,21 @@ export class TaskController {
       return res.status(500).json({ message: "Error creating task" });
     }
   }
+
+  static async setCompleted(req: Request, res: Response) {
+    try {
+      const task = await taskService.updateTask(Number(req.params.id), {
+        completed_at: new Date(),
+      });
+      if (!task) {
+        return res.status(404).json({ message: "Task not found" });
+      }
+      return res.status(200).json(task);
+    } catch (error) {
+      return res.status(500).json({ message: "Error completing task" });
+    }
+  }
+
   static async getHouseholdTasks(req: Request, res: Response) {
     try {
       const tasks = await taskService.getHouseholdTasks(

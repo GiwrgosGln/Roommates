@@ -4,6 +4,7 @@ import { JwtPayload } from "jsonwebtoken";
 import { UserService } from "../services/userService";
 import { AuthService } from "../services/authService";
 import { PasswordUtils } from "../utils/passwordUtils";
+import { TOKEN_EXPIRATION } from "../config/tokenConfig";
 
 const userService = new UserService();
 const authService = new AuthService();
@@ -17,13 +18,13 @@ export class AuthController {
     const accessToken = jwt.sign(
       { email: userData.email },
       process.env.JWT_ACCESS_SECRET!,
-      { expiresIn: "1m" }
+      { expiresIn: TOKEN_EXPIRATION.ACCESS_TOKEN }
     );
 
     const refreshToken = jwt.sign(
       { email: userData.email },
       process.env.JWT_REFRESH_SECRET!,
-      { expiresIn: "7d" }
+      { expiresIn: TOKEN_EXPIRATION.REFRESH_TOKEN }
     );
 
     return { accessToken, refreshToken };
@@ -86,7 +87,7 @@ export class AuthController {
 
         secure: process.env.NODE_ENV === "production",
         sameSite: "strict",
-        maxAge: 60 * 1000, // 1 minute
+        maxAge: TOKEN_EXPIRATION.ACCESS_TOKEN_COOKIE,
       });
 
       res.cookie("refreshToken", tokens.refreshToken, {
@@ -94,9 +95,9 @@ export class AuthController {
 
         secure: process.env.NODE_ENV === "production",
         sameSite: "strict",
-        maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
+        maxAge: TOKEN_EXPIRATION.REFRESH_TOKEN_COOKIE,
       });
-      // Return tokens in response body along with success message
+
       return res.json({
         message: "Login successful",
         accessToken: tokens.accessToken,

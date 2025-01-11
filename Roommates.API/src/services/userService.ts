@@ -28,10 +28,24 @@ export class UserService {
   async getUserProfile(email: string) {
     return prisma.users.findUnique({
       where: { email },
-      include: {
+      select: {
+        id: true,
+        name: true,
+        email: true,
+        profile_picture: true,
+        created_at: true,
+        updated_at: true,
+        default_household_id: true,
         household_members: {
-          include: {
-            households: true,
+          select: {
+            role: true,
+            households: {
+              select: {
+                id: true,
+                name: true,
+                created_at: true,
+              },
+            },
           },
         },
       },

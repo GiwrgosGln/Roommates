@@ -1,7 +1,7 @@
 import express from "express";
 import dotenv from "dotenv";
 import authRoutes from "./routes/auth";
-import protectedRoutes from "./routes/protectedRoute";
+import userRoutes from "./routes/userRoute";
 import householdRoutes from "./routes/householdRoute";
 import householdMemberRoutes from "./routes/householdMemberRoute";
 import taskRoutes from "./routes/taskRoute";
@@ -39,7 +39,7 @@ const corsOptions = {
 
 app.use(cors(corsOptions));
 app.use("/api/auth", authRoutes);
-app.use("/api", protectedRoutes);
+app.use("/api", userRoutes);
 app.use("/api", householdRoutes);
 app.use("/api", householdMemberRoutes);
 app.use("/api", taskRoutes);
@@ -74,3 +74,5 @@ const startServer = async () => {
 };
 
 startServer();
+
+export { app };
