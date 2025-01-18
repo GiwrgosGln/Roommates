@@ -13,18 +13,6 @@ dotenv.config();
 const app = express();
 const cors = require("cors");
 
-const testDatabaseConnection = async () => {
-  try {
-    const client = await pool.connect();
-    console.log("Successfully connected to PostgreSQL database");
-    client.release();
-    return true;
-  } catch (err) {
-    console.error("Database connection error:", err);
-    return false;
-  }
-};
-
 // Middleware
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));

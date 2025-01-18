@@ -16,9 +16,21 @@ export default function Header() {
         alignItems: "center",
       }}
     >
-      <Text style={{ fontSize: 24, color: secondaryTextColor }}>
-        Welcome back, John!
-      </Text>
+      <View
+        style={{
+          display: "flex",
+          flexDirection: "column",
+        }}
+      >
+        <Text style={{ fontSize: 22, color: secondaryTextColor }}>
+          Studio 22
+        </Text>
+        <Text
+          style={{ fontSize: 16, color: secondaryTextColor, fontWeight: 300 }}
+        >
+          Welcome back, Emma!
+        </Text>
+      </View>
       <Image
         source={{
           uri: "https://w7.pngwing.com/pngs/4/736/png-transparent-female-avatar-girl-face-woman-user-flat-classy-users-icon.png",

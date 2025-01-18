@@ -10,19 +10,25 @@ const userService = new UserService();
 const authService = new AuthService();
 
 export class AuthController {
-  private static generateTokens(userData: { email: string }) {
-    if (!userData || !userData.email) {
+  private static generateTokens(userData: { email: string; id: number }) {
+    if (!userData || !userData.email || !userData.id) {
       throw new Error("Invalid user data for token generation");
     }
 
     const accessToken = jwt.sign(
-      { email: userData.email },
+      {
+        email: userData.email,
+        id: userData.id,
+      },
       process.env.JWT_ACCESS_SECRET!,
       { expiresIn: TOKEN_EXPIRATION.ACCESS_TOKEN }
     );
 
     const refreshToken = jwt.sign(
-      { email: userData.email },
+      {
+        email: userData.email,
+        id: userData.id,
+      },
       process.env.JWT_REFRESH_SECRET!,
       { expiresIn: TOKEN_EXPIRATION.REFRESH_TOKEN }
     );
@@ -51,7 +57,10 @@ export class AuthController {
         name,
       });
 
-      const tokens = AuthController.generateTokens({ email: newUser.email });
+      const tokens = AuthController.generateTokens({
+        email: newUser.email,
+        id: newUser.id,
+      });
       return res.status(201).json({
         message: "User created successfully",
         tokens,
@@ -79,7 +88,10 @@ export class AuthController {
         return res.status(400).json({ message: "Invalid password" });
       }
 
-      const tokens = AuthController.generateTokens({ email: user.email });
+      const tokens = AuthController.generateTokens({
+        email: user.email,
+        id: user.id,
+      });
 
       // Set cookies with tokens
       res.cookie("accessToken", tokens.accessToken, {
@@ -131,7 +143,10 @@ export class AuthController {
       await authService.invalidateRefreshToken(refreshToken);
 
       // Generate new tokens
-      const tokens = AuthController.generateTokens({ email: user.email });
+      const tokens = AuthController.generateTokens({
+        email: user.email,
+        id: user.id,
+      });
 
       // Store new refresh token
       const expiresAt = new Date(Date.now() + 7 * 24 * 60 * 60 * 1000); // 7 days

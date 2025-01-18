@@ -83,13 +83,12 @@ export default function WeeklyTasks({ householdId }: WeeklyTasksProps) {
   const displayedTasks = showAll ? tasks : tasks.slice(0, 4);
 
   return (
-    <View style={{ flex: 1, marginTop: 40 }}>
+    <View style={{ flex: 1, paddingVertical: 40 }}>
       <View
         style={{
           flexDirection: "row",
           justifyContent: "space-between",
           alignItems: "center",
-          marginBottom: 16,
         }}
       >
         <Text
@@ -111,6 +110,7 @@ export default function WeeklyTasks({ householdId }: WeeklyTasksProps) {
           renderItem={renderTask}
           keyExtractor={(item) => item.id.toString()}
           showsVerticalScrollIndicator={false}
+          nestedScrollEnabled={false}
         />
         {tasks.length > 4 && (
           <Pressable

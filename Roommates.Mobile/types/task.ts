@@ -1,5 +1,6 @@
 export interface Task {
   id: number;
+  household_id: number;
   title: string;
   description: string | null;
   completed_at: string | null;

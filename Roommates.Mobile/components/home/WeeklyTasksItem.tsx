@@ -1,14 +1,37 @@
 import React from "react";
 import { View, Text } from "../StyledComponents";
-import { Colors } from "../../constants/Colors";
-import { useColorScheme } from "react-native";
 import { Pressable } from "react-native";
 import { useRouter } from "expo-router";
 import { WeeklyTasksItemProps } from "@/types/task";
+import { useThemeColor } from "@/hooks/useThemeColor";
+import { AntDesign, Feather, MaterialCommunityIcons } from "@expo/vector-icons";
 
 export default function WeeklyTasksItem({ task }: WeeklyTasksItemProps) {
-  const colorScheme = useColorScheme();
+  const [
+    success,
+    secondaryTextColor,
+    secondaryBackgroundColor,
+    highlightColor,
+  ] = [
+    useThemeColor({}, "success"),
+    useThemeColor({}, "secondaryText"),
+    useThemeColor({}, "secondaryBackground"),
+    useThemeColor({}, "highlight"),
+  ];
   const router = useRouter();
+
+  const getTimeStatus = (completedAt: Date | null) => {
+    if (!completedAt) return "In Progress";
+
+    const completed = new Date(completedAt);
+    const now = new Date();
+    const diffTime = Math.abs(now.getTime() - completed.getTime());
+    const diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24));
+
+    if (diffDays === 0) return "Completed Today";
+    if (diffDays === 1) return "Completed Yesterday";
+    return `Completed ${diffDays} days ago`;
+  };
 
   const handlePress = () => {
     router.push({
@@ -23,8 +46,8 @@ export default function WeeklyTasksItem({ task }: WeeklyTasksItemProps) {
         style={{
           flexDirection: "row",
           alignItems: "center",
-          justifyContent: "space-between",
-          padding: 16,
+          gap: 15,
+          padding: 20,
           marginVertical: 4,
           borderRadius: 8,
           shadowColor: "#000",
@@ -32,18 +55,34 @@ export default function WeeklyTasksItem({ task }: WeeklyTasksItemProps) {
           shadowOpacity: 0.1,
           shadowRadius: 2,
           elevation: 2,
-          backgroundColor: "#BCEB0B",
+          backgroundColor: secondaryBackgroundColor,
         }}
       >
-        <Text
-          style={{
-            fontSize: 16,
-            color: Colors[colorScheme ?? "light"].text,
-            textDecorationLine: task.completed_at ? "line-through" : "none",
-          }}
-        >
-          {task.title}
-        </Text>
+        {task.completed_at ? (
+          <Feather name="check-circle" size={20} color={success} />
+        ) : (
+          <Feather name="clock" size={20} color={highlightColor} />
+        )}
+        <View style={{ backgroundColor: secondaryBackgroundColor }}>
+          <Text
+            style={{
+              fontSize: 18,
+              color: task.completed_at ? success : secondaryTextColor,
+            }}
+          >
+            {task.title}
+          </Text>
+          <Text
+            style={{
+              fontSize: 14,
+              color: "lightgray",
+            }}
+          >
+            {getTimeStatus(
+              task.completed_at ? new Date(task.completed_at) : null
+            )}
+          </Text>
+        </View>
       </View>
     </Pressable>
   );

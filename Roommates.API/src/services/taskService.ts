@@ -1,28 +1,36 @@
 import { PrismaClient } from "@prisma/client";
+import { ITask } from "../types/task";
 
 const prisma = new PrismaClient();
 
 export class TaskService {
-  async createTask(taskData: {
-    title: string;
-    description?: string;
-    household_id: number;
-    created_by_id: number;
-  }) {
+  async createTask(taskData: ITask) {
     return prisma.tasks.create({
-      data: taskData,
-      include: {
-        users: true,
-
-        households: true,
+      data: {
+        title: taskData.title,
+        description: taskData.description,
+        household_id: taskData.household_id,
+        created_by_id: taskData.created_by_id,
       },
     });
   }
 
-  async getHouseholdTasks(householdId: number) {
+  async getFilteredHouseholdTasks(householdId: number) {
+    const sevenDaysAgo = new Date();
+    sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 7);
+
     return prisma.tasks.findMany({
       where: {
         household_id: householdId,
+        OR: [
+          { completed_at: null },
+          {
+            completed_at: {
+              gte: sevenDaysAgo,
+              not: null,
+            },
+          },
+        ],
       },
       orderBy: {
         created_at: "desc",

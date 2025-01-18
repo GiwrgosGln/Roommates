@@ -1,4 +1,5 @@
 import { AuthProvider } from "@/context/AuthContext";
+import { useThemeColor } from "@/hooks/useThemeColor";
 import { Stack, Redirect } from "expo-router";
 import * as SecureStore from "expo-secure-store";
 import { useEffect, useState } from "react";
@@ -6,6 +7,7 @@ import { useEffect, useState } from "react";
 export default function RootLayout() {
   const [token, setToken] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
+  const [backgroundColor] = [useThemeColor({}, "background")];
 
   useEffect(() => {
     checkToken();
