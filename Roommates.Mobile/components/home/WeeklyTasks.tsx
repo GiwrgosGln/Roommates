@@ -13,6 +13,7 @@ import Entypo from "@expo/vector-icons/Entypo";
 import { useThemeColor } from "@/hooks/useThemeColor";
 import WeeklyTasksItem from "./WeeklyTasksItem";
 import { Task, WeeklyTasksProps } from "@/types/task";
+import { useRouter } from "expo-router";
 
 export default function WeeklyTasks({ householdId }: WeeklyTasksProps) {
   const [tasks, setTasks] = useState<Task[]>([]);
@@ -20,6 +21,7 @@ export default function WeeklyTasks({ householdId }: WeeklyTasksProps) {
   const [showAll, setShowAll] = useState(false);
   const colorScheme = useColorScheme();
   const isFocused = useIsFocused();
+  const router = useRouter();
   const { refreshTokens } = useTokenRefresh();
   const [
     primaryText,
@@ -99,6 +101,7 @@ export default function WeeklyTasks({ householdId }: WeeklyTasksProps) {
           flexDirection: "row",
           justifyContent: "space-between",
           alignItems: "center",
+          paddingBottom: 10,
         }}
       >
         <Text
@@ -110,7 +113,14 @@ export default function WeeklyTasks({ householdId }: WeeklyTasksProps) {
         >
           Tasks
         </Text>
-        <Pressable>
+        <Pressable
+          onPress={() =>
+            router.push({
+              pathname: "/tasks/create_task",
+              params: { householdId: householdId },
+            })
+          }
+        >
           <Entypo name="add-to-list" size={24} color={primaryText} />
         </Pressable>
       </View>

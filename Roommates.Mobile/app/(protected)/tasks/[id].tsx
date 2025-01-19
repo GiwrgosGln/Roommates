@@ -8,6 +8,7 @@ import { useReadableDate } from "@/hooks/useDateTransform";
 import { Feather } from "@expo/vector-icons";
 import { API_URL } from "@/constants/Endpoint";
 import * as SecureStore from "expo-secure-store";
+import { LinearGradient } from "expo-linear-gradient";
 
 export default function TaskDetails() {
   const { id, task } = useLocalSearchParams();
@@ -18,6 +19,7 @@ export default function TaskDetails() {
     secondaryText,
     tintText,
     primaryBackground,
+    primaryBackgroundTint,
     highlight,
     highlightText,
     success,
@@ -27,6 +29,7 @@ export default function TaskDetails() {
     useThemeColor({}, "secondaryText"),
     useThemeColor({}, "tintText"),
     useThemeColor({}, "primaryBackground"),
+    useThemeColor({}, "primaryBackgroundTint"),
     useThemeColor({}, "highlight"),
     useThemeColor({}, "highlightText"),
     useThemeColor({}, "success"),
@@ -84,97 +87,101 @@ export default function TaskDetails() {
   };
 
   return (
-    <SafeAreaView style={{ flex: 1, backgroundColor: primaryBackground }}>
-      <View
-        style={{
-          flex: 1,
-          paddingHorizontal: 20,
-          paddingTop: 20,
-          paddingBottom: 60,
-          display: "flex",
-          flexDirection: "column",
-          justifyContent: "space-between",
-          backgroundColor: primaryBackground,
-        }}
-      >
-        <View>
-          <View
-            style={{
-              display: "flex",
-              flexDirection: "row",
-              justifyContent: "space-between",
-            }}
-          >
+    <LinearGradient
+      colors={[primaryBackground, primaryBackgroundTint]}
+      style={{ flex: 1 }}
+    >
+      <SafeAreaView style={{ flex: 1 }}>
+        <View
+          style={{
+            flex: 1,
+            paddingHorizontal: 20,
+            paddingTop: 20,
+            paddingBottom: 60,
+            display: "flex",
+            flexDirection: "column",
+            justifyContent: "space-between",
+          }}
+        >
+          <View>
+            <View
+              style={{
+                display: "flex",
+                flexDirection: "row",
+                justifyContent: "space-between",
+              }}
+            >
+              <Text
+                style={{
+                  color: primaryText,
+                  fontSize: 24,
+                }}
+              >
+                {taskData.title}
+              </Text>
+              {taskData.completed_at ? (
+                <Feather name="check-circle" size={22} color={success} />
+              ) : (
+                <Feather name="clock" size={22} color={highlight} />
+              )}
+            </View>
             <Text
               style={{
                 color: primaryText,
-                fontSize: 24,
+                fontWeight: 300,
               }}
             >
-              {taskData.title}
+              {readableDate}
             </Text>
-            {taskData.completed_at ? (
-              <Feather name="check-circle" size={22} color={success} />
-            ) : (
-              <Feather name="clock" size={22} color={highlight} />
-            )}
-          </View>
-          <Text
-            style={{
-              color: primaryText,
-              fontWeight: 300,
-            }}
-          >
-            {readableDate}
-          </Text>
 
-          <Text style={{ color: primaryText, fontSize: 16, marginTop: 20 }}>
-            {taskData.description}
-          </Text>
-        </View>
-        <View style={{ display: "flex", flexDirection: "column", gap: 12 }}>
-          {!taskData.completed_at && (
+            <Text style={{ color: primaryText, fontSize: 16, marginTop: 20 }}>
+              {taskData.description}
+            </Text>
+          </View>
+          <View style={{ display: "flex", flexDirection: "column", gap: 12 }}>
+            {!taskData.completed_at && (
+              <TouchableOpacity
+                onPress={handleComplete}
+                style={{
+                  backgroundColor: success,
+                  padding: 12,
+                  borderRadius: 8,
+                }}
+              >
+                <Text
+                  style={{
+                    color: secondaryText,
+                    fontSize: 16,
+                    textAlign: "center",
+                    fontWeight: 600,
+                  }}
+                >
+                  Complete Task
+                </Text>
+              </TouchableOpacity>
+            )}
+
             <TouchableOpacity
-              onPress={handleComplete}
+              onPress={handleDelete}
               style={{
-                backgroundColor: success,
+                backgroundColor: warning,
                 padding: 12,
                 borderRadius: 8,
               }}
             >
               <Text
                 style={{
-                  color: secondaryText,
+                  color: primaryText,
                   fontSize: 16,
                   textAlign: "center",
-                  fontWeight: 600,
                 }}
               >
-                Complete Task
+                Delete Task
               </Text>
             </TouchableOpacity>
-          )}
-
-          <TouchableOpacity
-            onPress={handleDelete}
-            style={{
-              backgroundColor: warning,
-              padding: 12,
-              borderRadius: 8,
-            }}
-          >
-            <Text
-              style={{
-                color: primaryText,
-                fontSize: 16,
-                textAlign: "center",
-              }}
-            >
-              Delete Task
-            </Text>
-          </TouchableOpacity>
+          </View>
         </View>
-      </View>
-    </SafeAreaView>
+      </SafeAreaView>
+    </LinearGradient>
   );
 }

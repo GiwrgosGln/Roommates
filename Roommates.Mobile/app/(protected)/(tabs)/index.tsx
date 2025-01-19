@@ -4,6 +4,7 @@ import WeeklyTasks from "@/components/home/WeeklyTasks";
 import { ScrollView } from "react-native";
 import { useThemeColor } from "@/hooks/useThemeColor";
 import { SafeAreaView } from "react-native-safe-area-context";
+import { LinearGradient } from "expo-linear-gradient";
 
 export default function Home() {
   const [
@@ -11,6 +12,7 @@ export default function Home() {
     secondaryText,
     tintText,
     primaryBackground,
+    primaryBackgroundTint,
     highlight,
     highlightText,
   ] = [
@@ -18,24 +20,28 @@ export default function Home() {
     useThemeColor({}, "secondaryText"),
     useThemeColor({}, "tintText"),
     useThemeColor({}, "primaryBackground"),
+    useThemeColor({}, "primaryBackgroundTint"),
     useThemeColor({}, "highlight"),
     useThemeColor({}, "highlightText"),
   ];
   return (
-    <SafeAreaView
-      style={{ flex: 1, height: "auto", backgroundColor: primaryBackground }}
+    <LinearGradient
+      colors={[primaryBackground, primaryBackgroundTint]}
+      style={{ flex: 1 }}
     >
-      <ScrollView
-        style={{
-          flexGrow: 1,
-          paddingHorizontal: 20,
-          paddingTop: 20,
-        }}
-      >
-        <Header />
-        <Bills />
-        <WeeklyTasks householdId={1} />
-      </ScrollView>
-    </SafeAreaView>
+      <SafeAreaView style={{ flex: 1 }}>
+        <ScrollView
+          style={{
+            flexGrow: 1,
+            paddingHorizontal: 20,
+            paddingTop: 20,
+          }}
+        >
+          <Header />
+          <Bills />
+          <WeeklyTasks householdId={1} />
+        </ScrollView>
+      </SafeAreaView>
+    </LinearGradient>
   );
 }

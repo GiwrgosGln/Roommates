@@ -58,6 +58,8 @@ export default function WeeklyTasksItem({ task }: WeeklyTasksItemProps) {
           padding: 20,
           marginVertical: 4,
           borderRadius: 8,
+          borderWidth: 0.2,
+          borderColor: tintText,
           shadowColor: "#000",
           shadowOffset: { width: 0, height: 1 },
           shadowOpacity: 0.1,

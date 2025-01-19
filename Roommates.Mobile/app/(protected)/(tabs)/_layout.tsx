@@ -9,6 +9,7 @@ export default function TabsLayout() {
     secondaryText,
     tintText,
     primaryBackground,
+    primaryBackgroundTint,
     highlight,
     highlightText,
   ] = [
@@ -16,6 +17,7 @@ export default function TabsLayout() {
     useThemeColor({}, "secondaryText"),
     useThemeColor({}, "tintText"),
     useThemeColor({}, "primaryBackground"),
+    useThemeColor({}, "primaryBackgroundTint"),
     useThemeColor({}, "highlight"),
     useThemeColor({}, "highlightText"),
   ];
@@ -31,7 +33,7 @@ export default function TabsLayout() {
         tabBarStyle: {
           borderTopWidth: 0,
           height: 60,
-          backgroundColor: primaryBackground,
+          backgroundColor: primaryBackgroundTint,
           position: "absolute",
         },
         tabBarShowLabel: false,
@@ -42,7 +44,7 @@ export default function TabsLayout() {
         options={{
           headerShown: false,
           tabBarStyle: {
-            backgroundColor: primaryBackground,
+            backgroundColor: primaryBackgroundTint,
             borderTopWidth: 0,
           },
           tabBarIcon: ({ focused }) => (
@@ -71,7 +73,7 @@ export default function TabsLayout() {
           headerShown: false,
           tabBarStyle: {
             borderTopWidth: 0,
-            backgroundColor: primaryBackground,
+            backgroundColor: primaryBackgroundTint,
           },
           tabBarIcon: ({ focused }) => (
             <View style={{ height: 40, justifyContent: "center" }}>

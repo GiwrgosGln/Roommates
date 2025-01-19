@@ -4,9 +4,9 @@ export const Colors = {
     secondaryText: "#000000",
     tintText: "#A3A3A3",
 
-    primaryBackground: "#202128",
-    primaryBackgroundTint: "",
-    secondaryBackground: "#292D3C",
+    primaryBackground: "#111827",
+    primaryBackgroundTint: "#1E2836",
+    secondaryBackground: "#222A38",
     secondaryBackgroundTint: "",
 
     highlight: "#FED32C",
@@ -22,7 +22,7 @@ export const Colors = {
     tintText: "#A3A3A3",
 
     primaryBackground: "#202128",
-    primaryBackgroundTint: "",
+    primaryBackgroundTint: "#131A29",
     secondaryBackground: "#292D3C",
     secondaryBackgroundTint: "",
 
