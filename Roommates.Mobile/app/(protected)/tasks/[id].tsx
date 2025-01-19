@@ -165,10 +165,9 @@ export default function TaskDetails() {
           >
             <Text
               style={{
-                color: secondaryText,
+                color: primaryText,
                 fontSize: 16,
                 textAlign: "center",
-                fontWeight: 600,
               }}
             >
               Delete Task

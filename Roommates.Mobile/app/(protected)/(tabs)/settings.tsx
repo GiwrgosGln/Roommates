@@ -1,7 +1,5 @@
-import { Text, View } from "@/components/StyledComponents";
+import { Text, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { StatusBar } from "expo-status-bar";
-import { ThemeToggle } from "@/components/ThemeToggle";
 import Logout from "@/components/auth/Logout";
 import { useThemeColor } from "@/hooks/useThemeColor";
 
@@ -31,7 +29,6 @@ export default function Settings() {
         }}
       >
         <Text style={{ fontSize: 20, color: primaryText }}>Settings</Text>
-        <ThemeToggle />
         <Logout />
       </View>
     </SafeAreaView>

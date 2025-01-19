@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { FlatList } from "react-native";
-import { View, Text } from "../StyledComponents";
+import { View, Text } from "react-native";
 import { API_URL } from "../../constants/Endpoint";
 import * as SecureStore from "expo-secure-store";
 import { Colors } from "../../constants/Colors";

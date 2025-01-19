@@ -7,7 +7,6 @@ import { useEffect, useState } from "react";
 export default function RootLayout() {
   const [token, setToken] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
-  const [backgroundColor] = [useThemeColor({}, "background")];
 
   useEffect(() => {
     checkToken();

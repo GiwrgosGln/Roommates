@@ -1,4 +1,4 @@
-import { View, Text } from "../StyledComponents";
+import { View, Text } from "react-native";
 import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
 import { Colors } from "../../constants/Colors";
 import { Image, useColorScheme } from "react-native";

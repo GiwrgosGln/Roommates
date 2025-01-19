@@ -1,5 +1,5 @@
 import { useThemeColor } from "@/hooks/useThemeColor";
-import { View, Text } from "../StyledComponents";
+import { View, Text } from "react-native";
 import { LinearGradient } from "expo-linear-gradient";
 
 export default function Bills() {

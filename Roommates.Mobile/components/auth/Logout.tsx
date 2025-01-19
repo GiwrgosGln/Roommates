@@ -1,4 +1,4 @@
-import { Text } from "@/components/StyledComponents";
+import { Text } from "react-native";
 import { TouchableOpacity, Alert } from "react-native";
 import * as SecureStore from "expo-secure-store";
 import { router } from "expo-router";

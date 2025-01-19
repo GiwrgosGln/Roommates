@@ -1,5 +1,5 @@
 import React from "react";
-import { View, Text } from "../StyledComponents";
+import { View, Text } from "react-native";
 import { Pressable } from "react-native";
 import { useRouter } from "expo-router";
 import { WeeklyTasksItemProps } from "@/types/task";

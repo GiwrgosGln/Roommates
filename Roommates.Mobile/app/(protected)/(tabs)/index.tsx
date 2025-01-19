@@ -1,7 +1,7 @@
 import Bills from "@/components/home/Bills";
 import Header from "@/components/home/Header";
 import WeeklyTasks from "@/components/home/WeeklyTasks";
-import { Text, ScrollView, View } from "@/components/StyledComponents";
+import { ScrollView } from "react-native";
 import { useThemeColor } from "@/hooks/useThemeColor";
 import { SafeAreaView } from "react-native-safe-area-context";
 
