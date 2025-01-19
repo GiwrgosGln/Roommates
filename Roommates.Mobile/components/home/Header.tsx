@@ -5,7 +5,21 @@ import { Image, useColorScheme } from "react-native";
 import { useThemeColor } from "@/hooks/useThemeColor";
 
 export default function Header() {
-  const [secondaryTextColor] = [useThemeColor({}, "secondaryText")];
+  const [
+    primaryText,
+    secondaryText,
+    tintText,
+    primaryBackground,
+    highlight,
+    highlightText,
+  ] = [
+    useThemeColor({}, "primaryText"),
+    useThemeColor({}, "secondaryText"),
+    useThemeColor({}, "tintText"),
+    useThemeColor({}, "primaryBackground"),
+    useThemeColor({}, "highlight"),
+    useThemeColor({}, "highlightText"),
+  ];
 
   return (
     <View
@@ -22,12 +36,8 @@ export default function Header() {
           flexDirection: "column",
         }}
       >
-        <Text style={{ fontSize: 22, color: secondaryTextColor }}>
-          Studio 22
-        </Text>
-        <Text
-          style={{ fontSize: 16, color: secondaryTextColor, fontWeight: 300 }}
-        >
+        <Text style={{ fontSize: 22, color: primaryText }}>Studio 22</Text>
+        <Text style={{ fontSize: 16, color: tintText }}>
           Welcome back, Emma!
         </Text>
       </View>

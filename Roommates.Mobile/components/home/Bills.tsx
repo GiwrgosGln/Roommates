@@ -4,24 +4,28 @@ import { LinearGradient } from "expo-linear-gradient";
 
 export default function Bills() {
   const [
-    success,
-    textColor,
-    secondaryTextColor,
-    highlightColor,
-    secondaryHightlightColor,
+    primaryText,
+    secondaryText,
+    tintText,
+    primaryBackground,
+    highlight,
+    highlightTint,
+    highlightText,
   ] = [
-    useThemeColor({}, "success"),
-    useThemeColor({}, "text"),
+    useThemeColor({}, "primaryText"),
     useThemeColor({}, "secondaryText"),
+    useThemeColor({}, "tintText"),
+    useThemeColor({}, "primaryBackground"),
     useThemeColor({}, "highlight"),
-    useThemeColor({}, "secondaryHighlight"),
+    useThemeColor({}, "highlightTint"),
+    useThemeColor({}, "highlightText"),
   ];
 
   const billsPercentage = (3 / 7) * 100;
 
   return (
     <LinearGradient
-      colors={[highlightColor, secondaryHightlightColor]}
+      colors={[highlight, highlightTint]}
       style={{
         width: "100%",
         marginTop: 30,
@@ -41,7 +45,7 @@ export default function Bills() {
           marginBottom: 15,
         }}
       >
-        <Text style={{ fontSize: 22, fontWeight: 600, color: textColor }}>
+        <Text style={{ fontSize: 22, fontWeight: 600, color: secondaryText }}>
           Bills
         </Text>
         <View
@@ -52,10 +56,10 @@ export default function Bills() {
             backgroundColor: "transparent",
           }}
         >
-          <Text style={{ fontSize: 16, color: textColor }}>
+          <Text style={{ fontSize: 16, color: secondaryText }}>
             1 bill out of 3 paid
           </Text>
-          <Text style={{ fontSize: 14, fontWeight: 700, color: textColor }}>
+          <Text style={{ fontSize: 14, fontWeight: 700, color: secondaryText }}>
             {Math.round(billsPercentage)}%
           </Text>
         </View>
@@ -73,7 +77,7 @@ export default function Bills() {
           style={{
             width: `${billsPercentage}%`,
             height: "100%",
-            backgroundColor: textColor,
+            backgroundColor: secondaryText,
             borderRadius: 3,
           }}
         />

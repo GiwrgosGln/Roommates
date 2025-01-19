@@ -33,4 +33,12 @@ router.patch(
   }
 );
 
+router.delete(
+  "/household/:householdId/tasks/:taskId",
+  authenticateToken as any,
+  async (req: AuthRequest, res: Response) => {
+    await TaskController.deleteTask(req, res);
+  }
+);
+
 export default router;

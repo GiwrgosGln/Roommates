@@ -3,8 +3,21 @@ import { Appearance } from "react-native";
 import { useThemeColor } from "@/hooks/useThemeColor";
 
 export function ThemeToggle() {
-  const backgroundColor = useThemeColor({}, "background");
-  const secondaryTextColor = useThemeColor({}, "secondaryText");
+  const [
+    primaryText,
+    secondaryText,
+    tintText,
+    primaryBackground,
+    highlight,
+    highlightText,
+  ] = [
+    useThemeColor({}, "primaryText"),
+    useThemeColor({}, "secondaryText"),
+    useThemeColor({}, "tintText"),
+    useThemeColor({}, "primaryBackground"),
+    useThemeColor({}, "highlight"),
+    useThemeColor({}, "highlightText"),
+  ];
 
   const toggleTheme = () => {
     const currentTheme = Appearance.getColorScheme();
@@ -17,11 +30,11 @@ export function ThemeToggle() {
       onPress={toggleTheme}
       style={{
         padding: 10,
-        backgroundColor,
+        backgroundColor: primaryBackground,
         borderRadius: 8,
       }}
     >
-      <Text style={{ color: secondaryTextColor }}>Toggle Theme</Text>
+      <Text style={{ color: primaryText }}>Toggle Theme</Text>
     </Pressable>
   );
 }

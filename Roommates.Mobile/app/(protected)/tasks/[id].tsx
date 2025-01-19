@@ -1,33 +1,34 @@
 import React from "react";
 import { router, useLocalSearchParams } from "expo-router";
-import { View, Text } from "@/components/StyledComponents";
 import { useThemeColor } from "@/hooks/useThemeColor";
 import { Task } from "@/types/task";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { TouchableOpacity } from "react-native";
+import { View, Text, TouchableOpacity } from "react-native";
 import { useReadableDate } from "@/hooks/useDateTransform";
 import { Feather } from "@expo/vector-icons";
 import { API_URL } from "@/constants/Endpoint";
-import { useTokenRefresh } from "@/hooks/useTokenRefresh";
 import * as SecureStore from "expo-secure-store";
 
 export default function TaskDetails() {
   const { id, task } = useLocalSearchParams();
   const { formatDate } = useReadableDate();
   const taskData: Task = JSON.parse(task as string);
-  const { refreshTokens } = useTokenRefresh();
   const [
-    backgroundColor,
-    textColor,
-    secondaryTextColor,
-    highlightColor,
-    successColor,
-    warningColor,
+    primaryText,
+    secondaryText,
+    tintText,
+    primaryBackground,
+    highlight,
+    highlightText,
+    success,
+    warning,
   ] = [
-    useThemeColor({}, "background"),
-    useThemeColor({}, "text"),
+    useThemeColor({}, "primaryText"),
     useThemeColor({}, "secondaryText"),
+    useThemeColor({}, "tintText"),
+    useThemeColor({}, "primaryBackground"),
     useThemeColor({}, "highlight"),
+    useThemeColor({}, "highlightText"),
     useThemeColor({}, "success"),
     useThemeColor({}, "warning"),
   ];
@@ -59,11 +60,31 @@ export default function TaskDetails() {
   };
 
   const handleDelete = async () => {
-    // Implement delete task logic using your API
+    try {
+      let token = await SecureStore.getItemAsync("accessToken");
+      await fetch(
+        `${API_URL}/household/${taskData.household_id}/tasks/${taskData.id}`,
+        {
+          method: "DELETE ",
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
+          },
+          credentials: "include",
+        }
+      );
+      router.replace("/");
+    } catch (error) {
+      if (error instanceof Error) {
+        console.error("Error details:", error.message);
+      } else {
+        console.error("Unknown error:", error);
+      }
+    }
   };
 
   return (
-    <SafeAreaView style={{ flex: 1 }}>
+    <SafeAreaView style={{ flex: 1, backgroundColor: primaryBackground }}>
       <View
         style={{
           flex: 1,
@@ -73,6 +94,7 @@ export default function TaskDetails() {
           display: "flex",
           flexDirection: "column",
           justifyContent: "space-between",
+          backgroundColor: primaryBackground,
         }}
       >
         <View>
@@ -85,30 +107,28 @@ export default function TaskDetails() {
           >
             <Text
               style={{
-                color: secondaryTextColor,
+                color: primaryText,
                 fontSize: 24,
               }}
             >
               {taskData.title}
             </Text>
             {taskData.completed_at ? (
-              <Feather name="check-circle" size={22} color={successColor} />
+              <Feather name="check-circle" size={22} color={success} />
             ) : (
-              <Feather name="clock" size={22} color={highlightColor} />
+              <Feather name="clock" size={22} color={highlight} />
             )}
           </View>
           <Text
             style={{
-              color: secondaryTextColor,
+              color: primaryText,
               fontWeight: 300,
             }}
           >
             {readableDate}
           </Text>
 
-          <Text
-            style={{ color: secondaryTextColor, fontSize: 16, marginTop: 20 }}
-          >
+          <Text style={{ color: primaryText, fontSize: 16, marginTop: 20 }}>
             {taskData.description}
           </Text>
         </View>
@@ -117,14 +137,14 @@ export default function TaskDetails() {
             <TouchableOpacity
               onPress={handleComplete}
               style={{
-                backgroundColor: successColor,
+                backgroundColor: success,
                 padding: 12,
                 borderRadius: 8,
               }}
             >
               <Text
                 style={{
-                  color: textColor,
+                  color: secondaryText,
                   fontSize: 16,
                   textAlign: "center",
                   fontWeight: 600,
@@ -138,14 +158,14 @@ export default function TaskDetails() {
           <TouchableOpacity
             onPress={handleDelete}
             style={{
-              backgroundColor: warningColor,
+              backgroundColor: warning,
               padding: 12,
               borderRadius: 8,
             }}
           >
             <Text
               style={{
-                color: secondaryTextColor,
+                color: secondaryText,
                 fontSize: 16,
                 textAlign: "center",
                 fontWeight: 600,

@@ -1,6 +1,5 @@
-import { View, Text } from "@/components/StyledComponents";
 import { useState } from "react";
-import { TextInput, TouchableOpacity } from "react-native";
+import { View, Text, TextInput, TouchableOpacity } from "react-native";
 import * as SecureStore from "expo-secure-store";
 import { router } from "expo-router";
 import { API_URL } from "@/constants/Endpoint";
@@ -9,10 +8,18 @@ import { useThemeColor } from "@/hooks/useThemeColor";
 export default function Login() {
   const [email, setEmail] = useState("test@gmail.com");
   const [password, setPassword] = useState("Test123!");
-  const [secondaryBackground, textColor, secondaryTextColor] = [
-    useThemeColor({}, "secondaryBackground"),
-    useThemeColor({}, "text"),
+  const [
+    primaryText,
+    secondaryText,
+    primaryBackground,
+    highlight,
+    highlightText,
+  ] = [
+    useThemeColor({}, "primaryText"),
     useThemeColor({}, "secondaryText"),
+    useThemeColor({}, "primaryBackground"),
+    useThemeColor({}, "highlight"),
+    useThemeColor({}, "highlightText"),
   ];
 
   const handleLogin = async () => {
@@ -42,7 +49,14 @@ export default function Login() {
   };
 
   return (
-    <View style={{ flex: 1, justifyContent: "center", padding: 20 }}>
+    <View
+      style={{
+        flex: 1,
+        justifyContent: "center",
+        padding: 20,
+        backgroundColor: primaryBackground,
+      }}
+    >
       <TextInput
         placeholder="Email"
         value={email}
@@ -51,8 +65,9 @@ export default function Login() {
           marginBottom: 10,
           padding: 10,
           borderWidth: 1,
-          color: secondaryTextColor,
-          borderColor: secondaryTextColor,
+          borderRadius: 5,
+          color: secondaryText,
+          borderColor: secondaryText,
         }}
       />
       <TextInput
@@ -64,19 +79,20 @@ export default function Login() {
           marginBottom: 10,
           padding: 10,
           borderWidth: 1,
-          color: secondaryTextColor,
-          borderColor: secondaryTextColor,
+          borderRadius: 5,
+          color: secondaryText,
+          borderColor: secondaryText,
         }}
       />
       <TouchableOpacity
         onPress={handleLogin}
         style={{
-          backgroundColor: secondaryBackground,
+          backgroundColor: highlight,
           padding: 15,
           borderRadius: 5,
         }}
       >
-        <Text style={{ color: textColor, textAlign: "center" }}>Login</Text>
+        <Text style={{ color: highlightText, textAlign: "center" }}>Login</Text>
       </TouchableOpacity>
     </View>
   );

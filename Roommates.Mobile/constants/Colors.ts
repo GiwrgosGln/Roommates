@@ -1,45 +1,53 @@
-const tintColorLight = "#0a7ea4";
-const tintColorBlue = "#007AFF";
-
 export const Colors = {
   light: {
-    text: "#FFFFFF",
+    primaryText: "#FFFFFF",
     secondaryText: "#000000",
-    background: "#FEFEFE",
+    tintText: "#A3A3A3",
+
+    primaryBackground: "#202128",
+    primaryBackgroundTint: "",
     secondaryBackground: "#292D3C",
+    secondaryBackgroundTint: "",
+
     highlight: "#FED32C",
-    secondaryHighlight: "#DA7806",
-    icon: "#687076",
+    highlightTint: "#DA7806",
+    highlightText: "#000000",
+
     success: "#66FFA7",
     warning: "#FF6B6B",
-    tabIconDefault: "#687076",
-    tabIconSelected: tintColorLight,
   },
   dark: {
-    text: "#000000",
-    secondaryText: "#FFFFFF",
-    background: "#202128",
+    primaryText: "#FFFFFF",
+    secondaryText: "#000000",
+    tintText: "#A3A3A3",
+
+    primaryBackground: "#202128",
+    primaryBackgroundTint: "",
     secondaryBackground: "#292D3C",
+    secondaryBackgroundTint: "",
+
     highlight: "#FED32C",
-    secondaryHighlight: "#DA7806",
-    icon: "#00AAFF",
+    highlightTint: "#DA7806",
+    highlightText: "#000000",
+
     success: "#66FFA7",
     warning: "#FF6B6B",
-    tabIconDefault: "#9BA1A6",
-    tabIconSelected: "#00AAFF",
   },
   blue: {
-    text: "#ffffff",
+    primaryText: "#000000",
     secondaryText: "#FFFFFF",
-    background: "#0055D4",
-    secondaryBackground: "#BCEB0B",
+    tintText: "#00AAFF",
+
+    primaryBackground: "#202128",
+    primaryBackgroundTint: "",
+    secondaryBackground: "#292D3C",
+    secondaryBackgroundTint: "",
+
     highlight: "#FED32C",
-    secondaryHighlight: "#DA7806",
-    tint: tintColorBlue,
-    icon: "#E1E8FF",
+    highlightTint: "#DA7806",
+    highlightText: "#FFFFFF",
+
     success: "#66FFA7",
     warning: "#FF6B6B",
-    tabIconDefault: "#E1E8FF",
-    tabIconSelected: tintColorBlue,
   },
 };

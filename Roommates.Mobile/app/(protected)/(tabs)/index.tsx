@@ -2,11 +2,29 @@ import Bills from "@/components/home/Bills";
 import Header from "@/components/home/Header";
 import WeeklyTasks from "@/components/home/WeeklyTasks";
 import { Text, ScrollView, View } from "@/components/StyledComponents";
+import { useThemeColor } from "@/hooks/useThemeColor";
 import { SafeAreaView } from "react-native-safe-area-context";
 
 export default function Home() {
+  const [
+    primaryText,
+    secondaryText,
+    tintText,
+    primaryBackground,
+    highlight,
+    highlightText,
+  ] = [
+    useThemeColor({}, "primaryText"),
+    useThemeColor({}, "secondaryText"),
+    useThemeColor({}, "tintText"),
+    useThemeColor({}, "primaryBackground"),
+    useThemeColor({}, "highlight"),
+    useThemeColor({}, "highlightText"),
+  ];
   return (
-    <SafeAreaView style={{ flex: 1, height: "auto" }}>
+    <SafeAreaView
+      style={{ flex: 1, height: "auto", backgroundColor: primaryBackground }}
+    >
       <ScrollView
         style={{
           flexGrow: 1,

@@ -3,8 +3,27 @@ import { TouchableOpacity, Alert } from "react-native";
 import * as SecureStore from "expo-secure-store";
 import { router } from "expo-router";
 import { API_URL } from "@/constants/Endpoint";
+import { useThemeColor } from "@/hooks/useThemeColor";
 
 export default function Logout() {
+  const [
+    primaryText,
+    secondaryText,
+    tintText,
+    primaryBackground,
+    highlight,
+    highlightText,
+    warning,
+  ] = [
+    useThemeColor({}, "primaryText"),
+    useThemeColor({}, "secondaryText"),
+    useThemeColor({}, "tintText"),
+    useThemeColor({}, "primaryBackground"),
+    useThemeColor({}, "highlight"),
+    useThemeColor({}, "highlightText"),
+    useThemeColor({}, "warning"),
+  ];
+
   const handleLogout = async () => {
     try {
       const response = await fetch(`${API_URL}/auth/logout`, {
@@ -26,12 +45,12 @@ export default function Logout() {
     <TouchableOpacity
       onPress={handleLogout}
       style={{
-        backgroundColor: "#ff6b6b",
+        backgroundColor: warning,
         padding: 15,
         borderRadius: 5,
       }}
     >
-      <Text style={{ color: "white", textAlign: "center" }}>Logout</Text>
+      <Text style={{ color: primaryText, textAlign: "center" }}>Logout</Text>
     </TouchableOpacity>
   );
 }

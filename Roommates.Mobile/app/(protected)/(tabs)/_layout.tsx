@@ -4,24 +4,34 @@ import { View } from "react-native";
 import { useThemeColor } from "@/hooks/useThemeColor";
 
 export default function TabsLayout() {
-  const [backgroundColor, secondaryBackgroundColor, secondaryTextColor] = [
-    useThemeColor({}, "background"),
-    useThemeColor({}, "secondaryBackground"),
+  const [
+    primaryText,
+    secondaryText,
+    tintText,
+    primaryBackground,
+    highlight,
+    highlightText,
+  ] = [
+    useThemeColor({}, "primaryText"),
     useThemeColor({}, "secondaryText"),
+    useThemeColor({}, "tintText"),
+    useThemeColor({}, "primaryBackground"),
+    useThemeColor({}, "highlight"),
+    useThemeColor({}, "highlightText"),
   ];
 
   return (
     <Tabs
       screenOptions={{
-        tabBarActiveTintColor: secondaryTextColor,
-        tabBarInactiveTintColor: secondaryTextColor,
+        tabBarActiveTintColor: primaryText,
+        tabBarInactiveTintColor: primaryText,
         tabBarItemStyle: {
           paddingBottom: 10,
         },
         tabBarStyle: {
           borderTopWidth: 0,
           height: 60,
-          backgroundColor: backgroundColor,
+          backgroundColor: primaryBackground,
           position: "absolute",
         },
         tabBarShowLabel: false,
@@ -32,12 +42,12 @@ export default function TabsLayout() {
         options={{
           headerShown: false,
           tabBarStyle: {
-            backgroundColor: backgroundColor,
+            backgroundColor: primaryBackground,
             borderTopWidth: 0,
           },
           tabBarIcon: ({ focused }) => (
             <View style={{ height: 40, justifyContent: "center" }}>
-              <Octicons size={28} name="home" color={secondaryTextColor} />
+              <Octicons size={28} name="home" color={primaryText} />
               {focused && (
                 <View
                   style={{
@@ -47,7 +57,7 @@ export default function TabsLayout() {
                     width: 6,
                     height: 6,
                     borderRadius: 3,
-                    backgroundColor: "#FED32C",
+                    backgroundColor: highlight,
                   }}
                 />
               )}
@@ -61,15 +71,11 @@ export default function TabsLayout() {
           headerShown: false,
           tabBarStyle: {
             borderTopWidth: 0,
-            backgroundColor: backgroundColor,
+            backgroundColor: primaryBackground,
           },
           tabBarIcon: ({ focused }) => (
             <View style={{ height: 40, justifyContent: "center" }}>
-              <Ionicons
-                size={28}
-                name="person-outline"
-                color={secondaryTextColor}
-              />
+              <Ionicons size={28} name="person-outline" color={primaryText} />
               {focused && (
                 <View
                   style={{
@@ -79,7 +85,7 @@ export default function TabsLayout() {
                     width: 6,
                     height: 6,
                     borderRadius: 3,
-                    backgroundColor: "#FED32C",
+                    backgroundColor: highlight,
                   }}
                 />
               )}

@@ -8,15 +8,23 @@ import { AntDesign, Feather, MaterialCommunityIcons } from "@expo/vector-icons";
 
 export default function WeeklyTasksItem({ task }: WeeklyTasksItemProps) {
   const [
+    primaryText,
+    secondaryText,
+    tintText,
+    primaryBackground,
+    secondaryBackground,
+    highlight,
+    highlightText,
     success,
-    secondaryTextColor,
-    secondaryBackgroundColor,
-    highlightColor,
   ] = [
-    useThemeColor({}, "success"),
+    useThemeColor({}, "primaryText"),
     useThemeColor({}, "secondaryText"),
+    useThemeColor({}, "tintText"),
+    useThemeColor({}, "primaryBackground"),
     useThemeColor({}, "secondaryBackground"),
     useThemeColor({}, "highlight"),
+    useThemeColor({}, "highlightText"),
+    useThemeColor({}, "success"),
   ];
   const router = useRouter();
 
@@ -55,19 +63,19 @@ export default function WeeklyTasksItem({ task }: WeeklyTasksItemProps) {
           shadowOpacity: 0.1,
           shadowRadius: 2,
           elevation: 2,
-          backgroundColor: secondaryBackgroundColor,
+          backgroundColor: secondaryBackground,
         }}
       >
         {task.completed_at ? (
           <Feather name="check-circle" size={20} color={success} />
         ) : (
-          <Feather name="clock" size={20} color={highlightColor} />
+          <Feather name="clock" size={20} color={highlight} />
         )}
-        <View style={{ backgroundColor: secondaryBackgroundColor }}>
+        <View style={{ backgroundColor: secondaryBackground }}>
           <Text
             style={{
               fontSize: 18,
-              color: task.completed_at ? success : secondaryTextColor,
+              color: task.completed_at ? success : primaryText,
             }}
           >
             {task.title}
@@ -75,7 +83,7 @@ export default function WeeklyTasksItem({ task }: WeeklyTasksItemProps) {
           <Text
             style={{
               fontSize: 14,
-              color: "lightgray",
+              color: tintText,
             }}
           >
             {getTimeStatus(

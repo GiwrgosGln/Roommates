@@ -21,10 +21,20 @@ export default function WeeklyTasks({ householdId }: WeeklyTasksProps) {
   const colorScheme = useColorScheme();
   const isFocused = useIsFocused();
   const { refreshTokens } = useTokenRefresh();
-  const [backgroundColor, textColor, secondaryTextColor] = [
-    useThemeColor({}, "background"),
-    useThemeColor({}, "text"),
+  const [
+    primaryText,
+    secondaryText,
+    tintText,
+    primaryBackground,
+    highlight,
+    highlightText,
+  ] = [
+    useThemeColor({}, "primaryText"),
     useThemeColor({}, "secondaryText"),
+    useThemeColor({}, "tintText"),
+    useThemeColor({}, "primaryBackground"),
+    useThemeColor({}, "highlight"),
+    useThemeColor({}, "highlightText"),
   ];
 
   useEffect(() => {
@@ -95,13 +105,13 @@ export default function WeeklyTasks({ householdId }: WeeklyTasksProps) {
           style={{
             fontSize: 20,
             fontWeight: "bold",
-            color: secondaryTextColor,
+            color: primaryText,
           }}
         >
           Tasks
         </Text>
         <Pressable>
-          <Entypo name="add-to-list" size={24} color="white" />
+          <Entypo name="add-to-list" size={24} color={primaryText} />
         </Pressable>
       </View>
       <View>
@@ -122,7 +132,7 @@ export default function WeeklyTasks({ householdId }: WeeklyTasksProps) {
               borderRadius: 8,
             }}
           >
-            <Text style={{ color: secondaryTextColor }}>
+            <Text style={{ color: primaryText }}>
               {showAll ? "Show Less" : `Show All (${tasks.length})`}
             </Text>
           </Pressable>
