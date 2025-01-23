@@ -130,7 +130,7 @@ export default function WeeklyTasks({ householdId }: WeeklyTasksProps) {
           renderItem={renderTask}
           keyExtractor={(item) => item.id.toString()}
           showsVerticalScrollIndicator={false}
-          nestedScrollEnabled={false}
+          scrollEnabled={false}
         />
         {tasks.length > 4 && (
           <Pressable
