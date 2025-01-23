@@ -48,12 +48,24 @@ export default function Settings() {
     },
     {
       id: 3,
+      title: "Tasks History",
+      icon: "clipboard-list-outline",
+      onPress: () => {},
+    },
+    {
+      id: 4,
+      title: "Bills History",
+      icon: "format-list-bulleted-square",
+      onPress: () => {},
+    },
+    {
+      id: 5,
       title: "Feature Idea",
       icon: "lightbulb-outline",
       onPress: () => {},
     },
     {
-      id: 4,
+      id: 6,
       title: "Report a bug",
       icon: "bug-outline",
       onPress: () => {},

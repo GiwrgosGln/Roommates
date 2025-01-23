@@ -1,4 +1,4 @@
-import Bills from "@/components/home/Bills";
+import UnpaidUtilities from "@/components/home/UnpaidUtilities";
 import Header from "@/components/home/Header";
 import WeeklyTasks from "@/components/home/WeeklyTasks";
 import { ScrollView } from "react-native";
@@ -38,7 +38,7 @@ export default function Home() {
           }}
         >
           <Header />
-          <Bills />
+          <UnpaidUtilities householdId={1} />
           <WeeklyTasks householdId={1} />
         </ScrollView>
       </SafeAreaView>

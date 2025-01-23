@@ -25,6 +25,7 @@ model households {
   created_at        DateTime?           @default(now()) @db.Timestamp(6)
   household_members household_members[]
   tasks             tasks[]
+  utilities         utilities[]
   users             users[]
 }
 
@@ -49,6 +50,20 @@ model tasks {
   users         users      @relation(fields: [created_by_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
 }
 
+model utilities {
+  id            Int        @id @default(autoincrement())
+  title         String     @db.VarChar(255)
+  amount        Decimal    @db.Decimal(10,2)
+  due_date      DateTime   @db.Timestamp(6)
+  paid_at       DateTime?  @db.Timestamp(6)
+  household_id  Int
+  created_by_id Int
+  created_at    DateTime?  @default(now()) @db.Timestamp(6)
+  updated_at    DateTime?  @default(now()) @db.Timestamp(6)
+  households    households @relation(fields: [household_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  created_by    users      @relation(fields: [created_by_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+}
+
 model users {
   id                   Int                 @id @default(autoincrement())
   name                 String              @unique @db.VarChar(50)
@@ -60,6 +75,7 @@ model users {
   default_household_id Int?
   household_members    household_members[]
   refresh_tokens       refresh_tokens[]
-  tasks                tasks[]
-  households           households?         @relation(fields: [default_household_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  tasks               tasks[]
+  utilities           utilities[]
+  households          households?         @relation(fields: [default_household_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
 }

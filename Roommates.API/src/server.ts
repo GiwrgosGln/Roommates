@@ -5,6 +5,7 @@ import userRoutes from "./routes/userRoute";
 import householdRoutes from "./routes/householdRoute";
 import householdMemberRoutes from "./routes/householdMemberRoute";
 import taskRoutes from "./routes/taskRoute";
+import utilityRoutes from "./routes/utilityRoute";
 import cookieParser from "cookie-parser";
 import pool from "./config/database";
 
@@ -31,6 +32,7 @@ app.use("/api", userRoutes);
 app.use("/api", householdRoutes);
 app.use("/api", householdMemberRoutes);
 app.use("/api", taskRoutes);
+app.use("/api", utilityRoutes);
 import { prisma } from "./lib/prisma";
 
 app.get("/health", async (req, res) => {
