@@ -36,32 +36,72 @@ export default function UtilityDetails() {
     useThemeColor({}, "warning"),
   ];
 
-  const handleMarkAsPaid = async () => {
-    const token = await SecureStore.getItemAsync("accessToken");
+  const validateParams = () => {
+    if (!params.householdId || !id) {
+      throw new Error("Missing required parameters");
+    }
+  };
 
-    const response = await fetch(
-      `${API_URL}/household/${params.householdId}/utilities/${id}/paid`,
-      {
-        method: "POST",
+  const handleMarkAsPaid = async () => {
+    console.log("Starting handleMarkAsPaid");
+    try {
+      const token = await SecureStore.getItemAsync("accessToken");
+      console.log("Token retrieved:", token ? "exists" : "missing");
+
+      const url = `${API_URL}/household/${params.householdId}/utilities/${id}/paid`;
+      console.log("Making request to:", url);
+
+      const response = await fetch(url, {
+        method: "PATCH",
         headers: {
           Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
         },
-      }
-    );
+      });
 
-    if (response.ok) {
-      router.replace({
-        pathname: "/utilities/[id]",
-        params: {
-          id,
-          utility: JSON.stringify({
-            ...utilityData,
-            paid_at: new Date().toISOString(),
-          }),
-        },
+      console.log("Response status:", response.status);
+      const responseData = await response.json();
+      console.log("Response data:", responseData);
+
+      router.back();
+    } catch (error: any) {
+      // Type assertion to handle the error object
+      console.log("Error details:", {
+        message: error?.message || "Unknown error",
+        stack: error?.stack || "No stack trace",
       });
     }
   };
+
+  const handleDelete = async () => {
+    try {
+      validateParams();
+      const token = await SecureStore.getItemAsync("accessToken");
+      if (!token) {
+        throw new Error("No access token found");
+      }
+
+      const response = await fetch(
+        `${API_URL}/household/${params.householdId}/utilities/${id}`,
+        {
+          method: "DELETE",
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
+          },
+        }
+      );
+
+      if (!response.ok) {
+        throw new Error(`API error: ${response.status}`);
+      }
+
+      router.back();
+    } catch (error) {
+      console.error("Failed to delete utility:", error);
+    }
+  };
+
   return (
     <LinearGradient
       colors={[primaryBackground, primaryBackgroundTint]}
@@ -127,7 +167,7 @@ export default function UtilityDetails() {
             )}
 
             <TouchableOpacity
-              onPress={handleMarkAsPaid}
+              onPress={handleDelete}
               style={{
                 backgroundColor: warning,
                 padding: 15,

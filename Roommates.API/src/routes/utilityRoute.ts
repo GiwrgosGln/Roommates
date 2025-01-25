@@ -41,4 +41,12 @@ router.patch(
   }
 );
 
+router.delete(
+  "/household/:householdId/utilities/:utilityId",
+  authenticateToken as any,
+  async (req: AuthRequest, res: Response) => {
+    await UtilityController.deleteUtility(req, res);
+  }
+);
+
 export default router;

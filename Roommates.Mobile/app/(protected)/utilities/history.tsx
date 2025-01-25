@@ -12,6 +12,7 @@ import * as SecureStore from "expo-secure-store";
 import { useLocalSearchParams, useRouter } from "expo-router";
 import { LinearGradient } from "expo-linear-gradient";
 import { SafeAreaView } from "react-native-safe-area-context";
+import { useIsFocused } from "@react-navigation/native";
 
 interface Utility {
   id: number;
@@ -28,6 +29,7 @@ export default function UtilityHistory() {
   const [refreshing, setRefreshing] = useState(false);
   const [loading, setLoading] = useState(true);
   const router = useRouter();
+  const isFocused = useIsFocused;
 
   const [
     primaryText,
@@ -82,7 +84,7 @@ export default function UtilityHistory() {
 
   useEffect(() => {
     fetchUtilities();
-  }, [householdId]);
+  }, [householdId, isFocused]);
 
   const onRefresh = () => {
     setRefreshing(true);

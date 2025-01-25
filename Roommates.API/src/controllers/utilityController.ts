@@ -65,4 +65,13 @@ export class UtilityController {
       res.status(500).json({ message: "Error marking utility as paid" });
     }
   }
+
+  static async deleteUtility(req: Request, res: Response) {
+    try {
+      await utilityService.deleteUtility(Number(req.params.utilityId));
+      return res.status(200).json({ message: "Utility deleted successfully" });
+    } catch (error) {
+      return res.status(500).json({ message: "Error deleting utility" });
+    }
+  }
 }

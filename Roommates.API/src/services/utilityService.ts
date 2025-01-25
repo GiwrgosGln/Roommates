@@ -73,4 +73,10 @@ export class UtilityService {
       },
     });
   }
+
+  async deleteUtility(utilityId: number) {
+    return prisma.utilities.delete({
+      where: { id: utilityId },
+    });
+  }
 }
