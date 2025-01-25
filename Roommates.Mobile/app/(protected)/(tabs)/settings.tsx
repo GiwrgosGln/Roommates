@@ -4,6 +4,10 @@ import { LinearGradient } from "expo-linear-gradient";
 import Logout from "@/components/auth/Logout";
 import { useThemeColor } from "@/hooks/useThemeColor";
 import { MaterialIcons, MaterialCommunityIcons } from "@expo/vector-icons";
+import { useRouter } from "expo-router";
+import { useState, useEffect } from "react";
+import * as SecureStore from "expo-secure-store";
+import { API_URL } from "@/constants/Endpoint";
 
 export default function Settings() {
   const [
@@ -25,6 +29,34 @@ export default function Settings() {
     useThemeColor({}, "highlight"),
     useThemeColor({}, "highlightText"),
   ];
+  const [defaultHouseholdId, setDefaultHouseholdId] = useState<number | null>(
+    null
+  );
+  const [userProfile, setUserProfile] = useState<any>(null);
+  const router = useRouter();
+
+  useEffect(() => {
+    const fetchUserProfile = async () => {
+      try {
+        const token = await SecureStore.getItemAsync("accessToken");
+        const response = await fetch(`${API_URL}/user/profile`, {
+          method: "GET",
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
+          },
+        });
+
+        const data = await response.json();
+        setUserProfile(data);
+        setDefaultHouseholdId(data.default_household_id);
+      } catch (error) {
+        console.error("Error fetching user profile:", error);
+      }
+    };
+
+    fetchUserProfile();
+  }, []);
 
   type MaterialCommunityIconName = keyof typeof MaterialCommunityIcons.glyphMap;
 
@@ -50,13 +82,23 @@ export default function Settings() {
       id: 3,
       title: "Tasks History",
       icon: "clipboard-list-outline",
-      onPress: () => {},
+      onPress: () => {
+        router.push({
+          pathname: "/(protected)/tasks/history",
+          params: { householdId: defaultHouseholdId },
+        });
+      },
     },
     {
       id: 4,
       title: "Bills History",
       icon: "format-list-bulleted-square",
-      onPress: () => {},
+      onPress: () => {
+        router.push({
+          pathname: "/(protected)/utilities/history",
+          params: { householdId: defaultHouseholdId },
+        });
+      },
     },
     {
       id: 5,

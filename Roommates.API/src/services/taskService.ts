@@ -38,6 +38,17 @@ export class TaskService {
     });
   }
 
+  async getHouseholdTasks(householdId: number) {
+    return prisma.tasks.findMany({
+      where: {
+        household_id: householdId,
+      },
+      orderBy: {
+        created_at: "desc",
+      },
+    });
+  }
+
   async updateTask(
     taskId: number,
     taskData: {

@@ -52,7 +52,7 @@ export default function TaskDetails() {
           credentials: "include",
         }
       );
-      router.replace("/");
+      router.back();
     } catch (error) {
       if (error instanceof Error) {
         console.error("Error details:", error.message);
@@ -76,7 +76,7 @@ export default function TaskDetails() {
           credentials: "include",
         }
       );
-      router.replace("/");
+      router.back();
     } catch (error) {
       if (error instanceof Error) {
         console.error("Error details:", error.message);

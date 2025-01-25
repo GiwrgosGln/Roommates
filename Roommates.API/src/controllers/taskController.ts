@@ -40,9 +40,20 @@ export class TaskController {
     }
   }
 
-  static async getHouseholdTasks(req: Request, res: Response) {
+  static async getRecentHouseholdTasks(req: Request, res: Response) {
     try {
       const tasks = await taskService.getFilteredHouseholdTasks(
+        Number(req.params.householdId)
+      );
+      return res.status(200).json(tasks);
+    } catch (error) {
+      return res.status(500).json({ message: "Error retrieving tasks" });
+    }
+  }
+
+  static async getHouseholdTasks(req: Request, res: Response) {
+    try {
+      const tasks = await taskService.getHouseholdTasks(
         Number(req.params.householdId)
       );
       return res.status(200).json(tasks);

@@ -25,6 +25,14 @@ router.get(
   }
 );
 
+router.get(
+  "/household/:householdId/utilities/all",
+  authenticateToken as any,
+  async (req: AuthRequest, res: Response) => {
+    await UtilityController.getAllUtilities(req, res);
+  }
+);
+
 router.patch(
   "/household/:householdId/utilities/:utilityId/paid",
   authenticateToken as any,

@@ -18,6 +18,14 @@ router.post(
 );
 
 router.get(
+  "/household/:householdId/recent_tasks",
+  authenticateToken as any,
+  async (req: AuthRequest, res: Response) => {
+    await TaskController.getRecentHouseholdTasks(req, res);
+  }
+);
+
+router.get(
   "/household/:householdId/tasks",
   authenticateToken as any,
   async (req: AuthRequest, res: Response) => {

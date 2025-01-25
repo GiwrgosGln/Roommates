@@ -43,7 +43,31 @@ export default function RootLayout() {
           }}
         />
         <Stack.Screen
+          name="tasks/history"
+          options={{
+            headerShown: false,
+          }}
+        />
+        <Stack.Screen
+          name="utilities/[id]"
+          options={{
+            headerShown: false,
+          }}
+        />
+        <Stack.Screen
           name="utilities/unpaid_utilities"
+          options={{
+            headerShown: false,
+          }}
+        />
+        <Stack.Screen
+          name="utilities/add_utility"
+          options={{
+            headerShown: false,
+          }}
+        />
+        <Stack.Screen
+          name="utilities/history"
           options={{
             headerShown: false,
           }}

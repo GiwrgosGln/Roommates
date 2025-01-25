@@ -7,6 +7,8 @@ import { useLocalSearchParams } from "expo-router";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { LinearGradient } from "expo-linear-gradient";
 import { useTokenRefresh } from "@/hooks/useTokenRefresh";
+import { useRouter } from "expo-router";
+import { useIsFocused } from "@react-navigation/native";
 
 type SearchParams = {
   householdId: string;
@@ -31,6 +33,8 @@ export default function UnpaidUtilitiesScreen() {
   const [utilities, setUtilities] = useState<Utility[]>([]);
   const [totalAmount, setTotalAmount] = useState(0);
   const { refreshTokens } = useTokenRefresh();
+  const router = useRouter();
+  const isFocused = useIsFocused;
 
   const [
     primaryText,
@@ -38,17 +42,25 @@ export default function UnpaidUtilitiesScreen() {
     tintText,
     primaryBackground,
     primaryBackgroundTint,
+    secondaryBackground,
     highlight,
     highlightTint,
+    success,
   ] = [
     useThemeColor({}, "primaryText"),
     useThemeColor({}, "secondaryText"),
     useThemeColor({}, "tintText"),
     useThemeColor({}, "primaryBackground"),
     useThemeColor({}, "primaryBackgroundTint"),
+    useThemeColor({}, "secondaryBackground"),
     useThemeColor({}, "highlight"),
     useThemeColor({}, "highlightTint"),
+    useThemeColor({}, "success"),
   ];
+
+  useEffect(() => {
+    fetchUnpaidUtilities();
+  });
 
   const fetchUnpaidUtilities = async () => {
     try {
@@ -112,10 +124,6 @@ export default function UnpaidUtilitiesScreen() {
     }
   };
 
-  useEffect(() => {
-    fetchUnpaidUtilities();
-  }, [householdId]);
-
   const renderUtilityItem = ({ item }: { item: Utility }) => (
     <View
       style={{
@@ -123,7 +131,7 @@ export default function UnpaidUtilitiesScreen() {
         justifyContent: "space-between",
         padding: 16,
         borderRadius: 12,
-        backgroundColor: primaryBackground,
+        backgroundColor: secondaryBackground,
         elevation: 2,
         shadowColor: "#000",
         shadowOffset: { width: 0, height: 2 },
@@ -162,14 +170,16 @@ export default function UnpaidUtilitiesScreen() {
         </Text>
         <TouchableOpacity
           style={{
-            backgroundColor: "#4CAF50",
+            backgroundColor: success,
             paddingHorizontal: 12,
             paddingVertical: 6,
             borderRadius: 6,
           }}
           onPress={() => markAsPaid(item.id)}
         >
-          <Text style={{ color: "white", fontSize: 14, fontWeight: "500" }}>
+          <Text
+            style={{ color: secondaryText, fontSize: 14, fontWeight: "500" }}
+          >
             Mark as Paid
           </Text>
         </TouchableOpacity>
@@ -210,12 +220,12 @@ export default function UnpaidUtilitiesScreen() {
             style={{
               flex: 1,
             }}
-            // onPress={() => {
-            //   router.push({
-            //     pathname: "/(protected)/utilities/add_utility",
-            //     params: { householdId },
-            //   });
-            // }}
+            onPress={() => {
+              router.push({
+                pathname: "/(protected)/utilities/add_utility",
+                params: { householdId },
+              });
+            }}
           >
             <LinearGradient
               colors={[highlight, highlightTint]}
@@ -241,12 +251,12 @@ export default function UnpaidUtilitiesScreen() {
             style={{
               flex: 1,
             }}
-            // onPress={() => {
-            //   router.push({
-            //     pathname: "/(protected)/utilities/add_utility",
-            //     params: { householdId },
-            //   });
-            // }}
+            onPress={() => {
+              router.push({
+                pathname: "/(protected)/utilities/history",
+                params: { householdId },
+              });
+            }}
           >
             <LinearGradient
               colors={[highlight, highlightTint]}

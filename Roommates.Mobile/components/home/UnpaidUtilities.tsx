@@ -58,10 +58,10 @@ export default function UnpaidUtilities({ householdId }: WeeklyTasksProps) {
   };
 
   useEffect(() => {
-    if (householdId && isFocused) {
+    if (isFocused) {
       fetchUnpaidUtilities();
     }
-  }, [householdId, isFocused]);
+  }, [isFocused]);
 
   const [
     primaryText,

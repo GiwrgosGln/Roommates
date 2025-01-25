@@ -40,6 +40,17 @@ export class UtilityController {
     }
   }
 
+  static async getAllUtilities(req: Request, res: Response): Promise<void> {
+    try {
+      const utilities = await utilityService.getAllUtilities(
+        Number(req.params.householdId)
+      );
+      res.status(200).json(utilities);
+    } catch (error) {
+      res.status(500).json({ message: "Error retrieving utilities" });
+    }
+  }
+
   static async markAsPaid(req: Request, res: Response): Promise<void> {
     try {
       const utility = await utilityService.markAsPaid(

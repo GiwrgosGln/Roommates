@@ -40,6 +40,25 @@ export class UtilityService {
     });
   }
 
+  async getAllUtilities(householdId: number) {
+    return prisma.utilities.findMany({
+      where: {
+        household_id: householdId,
+      },
+      include: {
+        created_by: {
+          select: {
+            name: true,
+            email: true,
+          },
+        },
+      },
+      orderBy: {
+        created_at: "desc",
+      },
+    });
+  }
+
   async markAsPaid(utilityId: number) {
     return prisma.utilities.update({
       where: {

@@ -50,12 +50,15 @@ export default function WeeklyTasks({ householdId }: WeeklyTasksProps) {
       let token = await SecureStore.getItemAsync("accessToken");
       console.log("Current token:", token);
 
-      let response = await fetch(`${API_URL}/household/${householdId}/tasks`, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-          "Content-Type": "application/json",
-        },
-      });
+      let response = await fetch(
+        `${API_URL}/household/${householdId}/recent_tasks`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
+          },
+        }
+      );
 
       if (response.status === 403) {
         // Token expired, refresh it
