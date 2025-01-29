@@ -40,6 +40,7 @@ export default function UnpaidUtilities({ householdId }: WeeklyTasksProps) {
           },
         }
       );
+
       const data = await response.json();
       setUtilities(data);
 

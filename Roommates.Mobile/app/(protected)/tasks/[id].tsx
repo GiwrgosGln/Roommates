@@ -17,21 +17,17 @@ export default function TaskDetails() {
   const [
     primaryText,
     secondaryText,
-    tintText,
     primaryBackground,
     primaryBackgroundTint,
     highlight,
-    highlightText,
     success,
     warning,
   ] = [
     useThemeColor({}, "primaryText"),
     useThemeColor({}, "secondaryText"),
-    useThemeColor({}, "tintText"),
     useThemeColor({}, "primaryBackground"),
     useThemeColor({}, "primaryBackgroundTint"),
     useThemeColor({}, "highlight"),
-    useThemeColor({}, "highlightText"),
     useThemeColor({}, "success"),
     useThemeColor({}, "warning"),
   ];

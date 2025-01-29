@@ -201,7 +201,13 @@ export default function UnpaidUtilitiesScreen() {
             marginBottom: 20,
           }}
         >
-          <Text style={{ fontSize: 24, fontWeight: "bold", color: tintText }}>
+          <Text
+            style={{
+              fontSize: 24,
+              fontWeight: "bold",
+              color: tintText,
+            }}
+          >
             Bills
           </Text>
           <Text style={{ fontSize: 18, fontWeight: "600", color: tintText }}>

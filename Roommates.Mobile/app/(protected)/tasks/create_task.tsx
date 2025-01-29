@@ -17,7 +17,6 @@ export default function CreateTask() {
 
   const [
     primaryText,
-    secondaryText,
     tintText,
     primaryBackground,
     primaryBackgroundTint,
@@ -25,7 +24,6 @@ export default function CreateTask() {
     highlightText,
   ] = [
     useThemeColor({}, "primaryText"),
-    useThemeColor({}, "secondaryText"),
     useThemeColor({}, "tintText"),
     useThemeColor({}, "primaryBackground"),
     useThemeColor({}, "primaryBackgroundTint"),
@@ -37,7 +35,6 @@ export default function CreateTask() {
     try {
       let token = await SecureStore.getItemAsync("accessToken");
 
-      // Convert householdId to number
       const household_id = parseInt(householdId as string);
 
       let response = await fetch(`${API_URL}/tasks`, {

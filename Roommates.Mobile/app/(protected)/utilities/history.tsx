@@ -29,7 +29,7 @@ export default function UtilityHistory() {
   const [refreshing, setRefreshing] = useState(false);
   const [loading, setLoading] = useState(true);
   const router = useRouter();
-  const isFocused = useIsFocused;
+  const isFocused = useIsFocused();
 
   const [
     primaryText,
@@ -84,7 +84,7 @@ export default function UtilityHistory() {
 
   useEffect(() => {
     fetchUtilities();
-  }, [householdId, isFocused]);
+  }, [isFocused]);
 
   const onRefresh = () => {
     setRefreshing(true);
@@ -197,7 +197,7 @@ export default function UtilityHistory() {
               <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
             }
             ListEmptyComponent={
-              <Text style={{ color: secondaryText, textAlign: "center" }}>
+              <Text style={{ color: primaryText, textAlign: "center" }}>
                 No utilities found
               </Text>
             }

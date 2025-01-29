@@ -16,22 +16,10 @@ export default function History() {
   const [refreshing, setRefreshing] = useState(false);
   const isFocused = useIsFocused();
   const { householdId } = useLocalSearchParams();
-  const [
-    primaryText,
-    secondaryText,
-    tintText,
-    primaryBackground,
-    primaryBackgroundTint,
-    highlight,
-    highlightText,
-  ] = [
+  const [primaryText, primaryBackground, primaryBackgroundTint] = [
     useThemeColor({}, "primaryText"),
-    useThemeColor({}, "secondaryText"),
-    useThemeColor({}, "tintText"),
     useThemeColor({}, "primaryBackground"),
     useThemeColor({}, "primaryBackgroundTint"),
-    useThemeColor({}, "highlight"),
-    useThemeColor({}, "highlightText"),
   ];
 
   const fetchTasks = async () => {

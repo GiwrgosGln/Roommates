@@ -10,24 +10,11 @@ import * as SecureStore from "expo-secure-store";
 import { API_URL } from "@/constants/Endpoint";
 
 export default function Settings() {
-  const [
-    primaryText,
-    secondaryText,
-    tintText,
-    primaryBackground,
-    primaryBackgroundTint,
-    secondaryBackground,
-    highlight,
-    highlightText,
-  ] = [
+  const [primaryText, tintText, primaryBackground, primaryBackgroundTint] = [
     useThemeColor({}, "primaryText"),
-    useThemeColor({}, "secondaryText"),
     useThemeColor({}, "tintText"),
     useThemeColor({}, "primaryBackground"),
     useThemeColor({}, "primaryBackgroundTint"),
-    useThemeColor({}, "secondaryBackground"),
-    useThemeColor({}, "highlight"),
-    useThemeColor({}, "highlightText"),
   ];
   const [defaultHouseholdId, setDefaultHouseholdId] = useState<number | null>(
     null
@@ -102,15 +89,13 @@ export default function Settings() {
     },
     {
       id: 5,
-      title: "Feature Idea",
+      title: "Feedback",
       icon: "lightbulb-outline",
-      onPress: () => {},
-    },
-    {
-      id: 6,
-      title: "Report a bug",
-      icon: "bug-outline",
-      onPress: () => {},
+      onPress: () => {
+        router.push({
+          pathname: "/(protected)/settings/feedback",
+        });
+      },
     },
   ];
 

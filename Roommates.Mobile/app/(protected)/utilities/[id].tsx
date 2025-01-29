@@ -65,11 +65,7 @@ export default function UtilityDetails() {
 
       router.back();
     } catch (error: any) {
-      // Type assertion to handle the error object
-      console.log("Error details:", {
-        message: error?.message || "Unknown error",
-        stack: error?.stack || "No stack trace",
-      });
+      console.error("Failed to delete utility:", error);
     }
   };
 
@@ -91,12 +87,11 @@ export default function UtilityDetails() {
           },
         }
       );
+      router.back();
 
       if (!response.ok) {
         throw new Error(`API error: ${response.status}`);
       }
-
-      router.back();
     } catch (error) {
       console.error("Failed to delete utility:", error);
     }
