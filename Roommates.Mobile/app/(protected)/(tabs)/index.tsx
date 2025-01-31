@@ -5,25 +5,42 @@ import { ScrollView } from "react-native";
 import { useThemeColor } from "@/hooks/useThemeColor";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { LinearGradient } from "expo-linear-gradient";
+import { useEffect } from "react";
+import * as SecureStore from "expo-secure-store";
+import { API_URL } from "@/constants/Endpoint";
 
 export default function Home() {
-  const [
-    primaryText,
-    secondaryText,
-    tintText,
-    primaryBackground,
-    primaryBackgroundTint,
-    highlight,
-    highlightText,
-  ] = [
-    useThemeColor({}, "primaryText"),
-    useThemeColor({}, "secondaryText"),
-    useThemeColor({}, "tintText"),
+  const [primaryBackground, primaryBackgroundTint] = [
     useThemeColor({}, "primaryBackground"),
     useThemeColor({}, "primaryBackgroundTint"),
-    useThemeColor({}, "highlight"),
-    useThemeColor({}, "highlightText"),
   ];
+
+  useEffect(() => {
+    const fetchUserProfile = async () => {
+      try {
+        const accessToken = await SecureStore.getItemAsync("accessToken");
+        const response = await fetch(`${API_URL}/user/profile`, {
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+            "Content-Type": "application/json",
+          },
+        });
+
+        if (response.ok) {
+          const userData = await response.json();
+          await SecureStore.setItemAsync(
+            "userProfile",
+            JSON.stringify(userData)
+          );
+        }
+      } catch (error) {
+        console.error("Error fetching user profile:", error);
+      }
+    };
+
+    fetchUserProfile();
+  }, []);
+
   return (
     <LinearGradient
       colors={[primaryBackground, primaryBackgroundTint]}

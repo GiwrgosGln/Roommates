@@ -174,7 +174,6 @@ export default function UtilityHistory() {
         <View
           style={{
             flex: 1,
-            backgroundColor: primaryBackground,
             padding: 20,
           }}
         >

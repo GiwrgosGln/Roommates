@@ -57,7 +57,12 @@ export default function Settings() {
       id: 1,
       title: "Households",
       icon: "home",
-      onPress: () => {},
+      onPress: () => {
+        router.push({
+          pathname: "/(protected)/settings/households",
+          params: { userProfile: userProfile },
+        });
+      },
     },
     {
       id: 2,
