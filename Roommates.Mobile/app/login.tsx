@@ -4,6 +4,7 @@ import * as SecureStore from "expo-secure-store";
 import { router } from "expo-router";
 import { API_URL } from "@/constants/Endpoint";
 import { useThemeColor } from "@/hooks/useThemeColor";
+import { LinearGradient } from "expo-linear-gradient";
 
 export default function Login() {
   const [email, setEmail] = useState("test@gmail.com");
@@ -13,12 +14,14 @@ export default function Login() {
     secondaryText,
     primaryBackground,
     highlight,
+    highlightTint,
     highlightText,
   ] = [
     useThemeColor({}, "primaryText"),
     useThemeColor({}, "secondaryText"),
     useThemeColor({}, "primaryBackground"),
     useThemeColor({}, "highlight"),
+    useThemeColor({}, "highlightTint"),
     useThemeColor({}, "highlightText"),
   ];
 
@@ -66,8 +69,8 @@ export default function Login() {
           padding: 10,
           borderWidth: 1,
           borderRadius: 5,
-          color: secondaryText,
-          borderColor: secondaryText,
+          color: primaryText,
+          borderColor: primaryText,
         }}
       />
       <TextInput
@@ -80,19 +83,30 @@ export default function Login() {
           padding: 10,
           borderWidth: 1,
           borderRadius: 5,
-          color: secondaryText,
-          borderColor: secondaryText,
+          color: primaryText,
+          borderColor: primaryText,
         }}
       />
-      <TouchableOpacity
-        onPress={handleLogin}
-        style={{
-          backgroundColor: highlight,
-          padding: 15,
-          borderRadius: 5,
-        }}
-      >
-        <Text style={{ color: highlightText, textAlign: "center" }}>Login</Text>
+      <TouchableOpacity onPress={handleLogin}>
+        <LinearGradient
+          colors={[highlight, highlightTint]}
+          style={{
+            width: "100%",
+            marginTop: 30,
+            paddingVertical: 20,
+            borderTopLeftRadius: 15,
+            borderTopRightRadius: 15,
+            borderBottomLeftRadius: 15,
+            borderBottomRightRadius: 15,
+            display: "flex",
+            flexDirection: "column",
+            paddingHorizontal: 20,
+          }}
+        >
+          <Text style={{ color: highlightText, textAlign: "center" }}>
+            Login
+          </Text>
+        </LinearGradient>
       </TouchableOpacity>
     </View>
   );

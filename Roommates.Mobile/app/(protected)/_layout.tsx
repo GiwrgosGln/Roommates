@@ -79,7 +79,7 @@ export default function RootLayout() {
           }}
         />
         <Stack.Screen
-          name="settings/households"
+          name="settings/household_management"
           options={{
             headerShown: false,
           }}

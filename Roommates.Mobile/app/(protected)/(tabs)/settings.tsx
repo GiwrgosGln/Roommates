@@ -55,47 +55,45 @@ export default function Settings() {
   }[] = [
     {
       id: 1,
-      title: "Households",
-      icon: "home",
+      title: "Household Management",
+      icon: "home" as MaterialCommunityIconName,
       onPress: () => {
         router.push({
-          pathname: "/(protected)/settings/households",
-          params: { userProfile: userProfile },
+          pathname: "/(protected)/settings/household_management",
+          params: { userProfile: JSON.stringify(userProfile) },
         });
       },
     },
-    {
-      id: 2,
-      title: "Household Members",
-      icon: "account-group",
-      onPress: () => {},
-    },
-    {
-      id: 3,
-      title: "Tasks History",
-      icon: "clipboard-list-outline",
-      onPress: () => {
-        router.push({
-          pathname: "/(protected)/tasks/history",
-          params: { householdId: defaultHouseholdId },
-        });
-      },
-    },
+    ...(defaultHouseholdId !== null
+      ? [
+          {
+            id: 2,
+            title: "Tasks History",
+            icon: "clipboard-list-outline" as MaterialCommunityIconName,
+            onPress: () => {
+              router.push({
+                pathname: "/(protected)/tasks/history",
+                params: { householdId: defaultHouseholdId },
+              });
+            },
+          },
+          {
+            id: 3,
+            title: "Bills History",
+            icon: "format-list-bulleted-square" as MaterialCommunityIconName,
+            onPress: () => {
+              router.push({
+                pathname: "/(protected)/utilities/history",
+                params: { householdId: defaultHouseholdId },
+              });
+            },
+          },
+        ]
+      : []),
     {
       id: 4,
-      title: "Bills History",
-      icon: "format-list-bulleted-square",
-      onPress: () => {
-        router.push({
-          pathname: "/(protected)/utilities/history",
-          params: { householdId: defaultHouseholdId },
-        });
-      },
-    },
-    {
-      id: 5,
       title: "Feedback",
-      icon: "lightbulb-outline",
+      icon: "lightbulb-outline" as MaterialCommunityIconName,
       onPress: () => {
         router.push({
           pathname: "/(protected)/settings/feedback",

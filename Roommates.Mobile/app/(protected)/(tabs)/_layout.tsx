@@ -10,6 +10,7 @@ export default function TabsLayout() {
     tintText,
     primaryBackground,
     primaryBackgroundTint,
+    secondaryBackground,
     highlight,
     highlightText,
   ] = [
@@ -18,6 +19,7 @@ export default function TabsLayout() {
     useThemeColor({}, "tintText"),
     useThemeColor({}, "primaryBackground"),
     useThemeColor({}, "primaryBackgroundTint"),
+    useThemeColor({}, "secondaryBackground"),
     useThemeColor({}, "highlight"),
     useThemeColor({}, "highlightText"),
   ];
@@ -33,7 +35,7 @@ export default function TabsLayout() {
         tabBarStyle: {
           borderTopWidth: 0,
           height: 60,
-          backgroundColor: primaryBackgroundTint,
+          backgroundColor: secondaryBackground,
           position: "absolute",
         },
         tabBarShowLabel: false,

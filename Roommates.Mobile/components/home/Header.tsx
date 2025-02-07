@@ -1,24 +1,12 @@
 import { View, Text } from "react-native";
-import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
-import { Colors } from "../../constants/Colors";
 import { Image, useColorScheme } from "react-native";
 import { useThemeColor } from "@/hooks/useThemeColor";
+import { UserData } from "@/types/user";
 
-export default function Header() {
-  const [
-    primaryText,
-    secondaryText,
-    tintText,
-    primaryBackground,
-    highlight,
-    highlightText,
-  ] = [
+export default function Header(userData: UserData) {
+  const [primaryText, tintText] = [
     useThemeColor({}, "primaryText"),
-    useThemeColor({}, "secondaryText"),
     useThemeColor({}, "tintText"),
-    useThemeColor({}, "primaryBackground"),
-    useThemeColor({}, "highlight"),
-    useThemeColor({}, "highlightText"),
   ];
 
   return (
@@ -36,14 +24,24 @@ export default function Header() {
           flexDirection: "column",
         }}
       >
-        <Text style={{ fontSize: 22, color: primaryText }}>Studio 22</Text>
-        <Text style={{ fontSize: 16, color: tintText }}>
-          Welcome back, Emma!
-        </Text>
+        {!userData.default_household_id ? (
+          <Text style={{ fontSize: 16, color: tintText }}>
+            Welcome back, {userData.name}!
+          </Text>
+        ) : (
+          <View>
+            <Text style={{ fontSize: 16, color: tintText }}>
+              Welcome back, {userData.name}!
+            </Text>
+          </View>
+        )}
       </View>
+
       <Image
         source={{
-          uri: "https://w7.pngwing.com/pngs/4/736/png-transparent-female-avatar-girl-face-woman-user-flat-classy-users-icon.png",
+          uri:
+            userData.profile_picture ||
+            "https://w7.pngwing.com/pngs/4/736/png-transparent-female-avatar-girl-face-woman-user-flat-classy-users-icon.png",
         }}
         style={{ width: 50, height: 50, borderRadius: 25 }}
       />
